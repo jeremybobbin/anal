@@ -40,7 +40,7 @@
 [0-9]+                                                                   {yylval.s = yytext; return INTEGER;}
 [0-9]*"."[0-9]+                                                          {yylval.s = yytext; return FLOATING_POINT;}	
 "'"."'"                                                                  {yylval.s = yytext; return CHARACTER;}
-[a-zA-z_][a-zA-z_0-9]*                                                   {return IDENTIFIER;}
+[a-zA-z_][a-zA-z_0-9]*                                                   {yylval.s = yytext; return IDENTIFIER;}
 ["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return STRING;}
 "//"(\\.|[^\n])*                                                         {printt("comment", yytext);};
 [/][*]([^*]|[*]*[^*/])*[*]+[/]                                           {printt("comment", yytext);};

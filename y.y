@@ -80,6 +80,7 @@ int printt(char *type, char *token) {
 %left THEN ELSE
 
 %%
+
 translation_unit:
 	  external_declaration
 	| translation_unit external_declaration
@@ -117,7 +118,7 @@ declaration_specs:
 	;
 
 type:
-	  PRIMATIVE
+	  PRIMATIVE {  printt("primative", $1); }
 	| STRUCT IDENTIFIER '{' struct_declaration_list '}'
 	| STRUCT '{' struct_declaration_list '}'
 	| STRUCT IDENTIFIER
@@ -417,7 +418,7 @@ postfix_expression:
 	;
 
 primary_expression:
-	  IDENTIFIER
+	  IDENTIFIER        {  printt("variable",  $1); }
 	| INTEGER           {  printt("integer",   $1); }
 	| CHARACTER         {  printt("character", $1); }
 	| FLOATING_POINT    {  printt("float",     $1); }
@@ -429,6 +430,7 @@ argument_expression_list:
 	  assignment_expression
 	| argument_expression_list ',' assignment_expression
 	;
+
 %%
 
 int main() {
