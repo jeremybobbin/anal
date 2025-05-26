@@ -109,25 +109,23 @@ declaration_list:
 declaration_specs:
 	  TYPEDEF declaration_specs
 	| TYPEDEF
-	| type_spec declaration_specs
-	| type_spec
+	| type declaration_specs
+	| type
 	| QUALITY declaration_specs
 	| QUALITY
 	;
 
-type_spec:
+type:
 	  PRIMATIVE
-	| struct_or_union_spec
-	| enum_spec
-	;
-
-struct_or_union_spec:
-	  STRUCT IDENTIFIER '{' struct_declaration_list '}'
+	| STRUCT IDENTIFIER '{' struct_declaration_list '}'
 	| STRUCT '{' struct_declaration_list '}'
 	| STRUCT IDENTIFIER
 	| UNION IDENTIFIER '{' struct_declaration_list '}'
 	| UNION '{' struct_declaration_list '}'
 	| UNION IDENTIFIER
+	| ENUM IDENTIFIER '{' enumerator_list '}'
+	| ENUM '{' enumerator_list '}'
+	| ENUM IDENTIFIER
 	;
 
 struct_declaration_list:
@@ -150,8 +148,8 @@ struct_declaration:
 	;
 
 spec_qualifier_list:
-	  type_spec spec_qualifier_list
-	| type_spec
+	  type spec_qualifier_list
+	| type
 	| QUALITY spec_qualifier_list
 	| QUALITY
 	;
@@ -165,12 +163,6 @@ struct_declarator:
 	  declarator
 	| declarator ':' const_expression
 	| ':' const_expression
-	;
-
-enum_spec:
-	  ENUM IDENTIFIER '{' enumerator_list '}'
-	| ENUM '{' enumerator_list '}'
-	| ENUM IDENTIFIER
 	;
 
 enumerator_list:
