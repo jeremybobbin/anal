@@ -70,7 +70,7 @@ int printt(char *type, char *token) {
 }
 
 %token <s> INTEGER CHARACTER FLOATING_POINT IDENTIFIER STRING PRIMATIVE QUALITY PREPROCESSOR ASSIGNMENT_OPERATOR
-%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE RIGHT LEFT rel_const INCREMENT DECREMENT
+%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE CONTRAST RIGHT LEFT INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
 %left '+' '-'
@@ -369,14 +369,12 @@ and_expression:
 
 equality_expression:
 	  relational_expression
-	| equality_expression COMPARE relational_expression
+	| equality_expression CONTRAST relational_expression
 	;
 
 relational_expression:
 	  shift_expression
-	| relational_expression '<' shift_expression
-	| relational_expression '>' shift_expression
-	| relational_expression rel_const shift_expression
+	| relational_expression COMPARE shift_expression
 	;
 
 shift_expression:
