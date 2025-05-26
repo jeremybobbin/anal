@@ -21,7 +21,8 @@
 "goto"                                                                   {return GOTO;}
 "continue"                                                               {return CONTINUE;}
 "break"                                                                  {return BREAK;}
-"struct"|"union"                                                         {return struct_const;}
+"struct"                                                                 {return STRUCT;}
+"union"                                                                  {return UNION;}
 "return"                                                                 {return RETURN;}
 "sizeof"                                                                 {return SIZEOF;}
 "||"                                                                     {return or_const;}

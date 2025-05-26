@@ -11,6 +11,9 @@
 
 int yylex(void);
 
+#ifdef YYDEBUG
+int yydebug = 1;
+#endif
 extern int yylineno;
 extern int yyleng;
 
@@ -66,8 +69,8 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> int_const char_const float_const id string enumeration_const primative quality struct_const preprocessor assignment_operator 
-%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM or_const and_const eq_const shift_const rel_const inc_const
+%token <s> int_const char_const float_const id string enumeration_const primative quality preprocessor assignment_operator
+%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION or_const and_const eq_const shift_const rel_const inc_const
 %token <s> point_const param_const ELSE
 
 %left '+' '-'
@@ -119,13 +122,12 @@ type_spec:
 	;
 
 struct_or_union_spec:
-	  struct_or_union id '{' struct_declaration_list '}'
-	| struct_or_union '{' struct_declaration_list '}'
-	| struct_or_union id
-	;
-
-struct_or_union:
-	  struct_const
+	  STRUCT id '{' struct_declaration_list '}'
+	| STRUCT '{' struct_declaration_list '}'
+	| STRUCT id
+	| UNION id '{' struct_declaration_list '}'
+	| UNION '{' struct_declaration_list '}'
+	| UNION id
 	;
 
 struct_declaration_list:
