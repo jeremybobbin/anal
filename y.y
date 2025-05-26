@@ -69,9 +69,9 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> int_const char_const float_const id string enumeration_const primative quality preprocessor assignment_operator
-%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION or_const and_const eq_const shift_const rel_const inc_const
-%token <s> point_const param_const ELSE
+%token <s> int_const char_const float_const identifier string enumeration_const primative quality preprocessor assignment_operator
+%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND eq_const shift_const rel_const inc_const
+%token <s> point_const REST ELSE
 
 %left '+' '-'
 %left '*' '/'
@@ -122,12 +122,12 @@ type_spec:
 	;
 
 struct_or_union_spec:
-	  STRUCT id '{' struct_declaration_list '}'
+	  STRUCT identifier '{' struct_declaration_list '}'
 	| STRUCT '{' struct_declaration_list '}'
-	| STRUCT id
-	| UNION id '{' struct_declaration_list '}'
+	| STRUCT identifier
+	| UNION identifier '{' struct_declaration_list '}'
 	| UNION '{' struct_declaration_list '}'
-	| UNION id
+	| UNION identifier
 	;
 
 struct_declaration_list:
@@ -168,9 +168,9 @@ struct_declarator:
 	;
 
 enum_spec:
-	  ENUM id '{' enumerator_list '}'
+	  ENUM identifier '{' enumerator_list '}'
 	| ENUM '{' enumerator_list '}'
-	| ENUM id
+	| ENUM identifier
 	;
 
 enumerator_list:
@@ -179,8 +179,8 @@ enumerator_list:
 	;
 
 enumerator:
-	  id
-	| id '=' const_expression
+	  identifier
+	| identifier '=' const_expression
 	;
 
 declarator:
@@ -189,7 +189,7 @@ declarator:
 	;
 
 direct_declarator:
-	  id
+	  identifier
 	| '(' declarator ')'
 	| direct_declarator '[' const_expression ']'
 	| direct_declarator '['	']'
@@ -212,7 +212,7 @@ type_qualifier_list:
 
 param_type_list:
 	  param_list
-	| param_list ',' param_const
+	| param_list ',' REST
 	;
 
 param_list:
@@ -227,8 +227,8 @@ param_declaration:
 	;
 
 id_list:
-	  id
-	| id_list ',' id
+	  identifier
+	| id_list ',' identifier
 	;
 
 initializer:
@@ -275,7 +275,7 @@ statement:
 	;
 
 labeled_statement:
-	  id ':' statement
+	  identifier ':' statement
 	| CASE const_expression ':' statement
 	| DEFAULT ':' statement
 	;
@@ -316,7 +316,7 @@ iteration_statement:
 	;
 
 jump_statement:
-	  GOTO id ';'
+	  GOTO identifier ';'
 	| CONTINUE ';'
 	| BREAK ';'
 	| RETURN expression ';'
@@ -344,12 +344,12 @@ const_expression:
 
 logical_or_expression:
 	  logical_and_expression
-	| logical_or_expression or_const logical_and_expression
+	| logical_or_expression OR logical_and_expression
 	;
 
 logical_and_expression:
 	  inclusive_or_expression
-	| logical_and_expression and_const inclusive_or_expression
+	| logical_and_expression AND inclusive_or_expression
 	;
 
 inclusive_or_expression:
@@ -419,13 +419,13 @@ postfix_expression:
 	| postfix_expression '[' expression ']'
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '(' ')'
-	| postfix_expression '.' id
-	| postfix_expression point_const id
+	| postfix_expression '.' identifier
+	| postfix_expression point_const identifier
 	| postfix_expression inc_const
 	;
 
 primary_expression:
-	  id
+	  identifier
 	| int_const         {  printt("integer",   $1); }
 	| char_const        {  printt("character", $1); }
 	| float_const       {  printt("float",     $1); }
