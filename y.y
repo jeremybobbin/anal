@@ -186,7 +186,7 @@ direct_declarator:
 	| direct_declarator '[' const_expression ']'
 	| direct_declarator '['	']'
 	| direct_declarator '(' param_type_list ')'
-	| direct_declarator '(' id_list ')'
+	| direct_declarator '(' identifier_list ')'
 	| direct_declarator '('	')'
 	;
 
@@ -218,9 +218,9 @@ param_declaration:
 	| declaration_specs
 	;
 
-id_list:
+identifier_list:
 	  IDENTIFIER
-	| id_list ',' IDENTIFIER
+	| identifier_list ',' IDENTIFIER
 	;
 
 initializer:
