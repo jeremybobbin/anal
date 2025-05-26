@@ -91,10 +91,10 @@ external_declaration:
 	;
 
 function_definition:
-	  declaration_specs declarator declaration_list compound_statement
-	| declarator declaration_list compound_statement
-	| declaration_specs declarator	compound_statement
-	| declarator compound_statement
+	  declaration_specs declarator declaration_list block
+	| declarator declaration_list block
+	| declaration_specs declarator	block
+	| declarator block
 	;
 
 declaration:
@@ -259,7 +259,7 @@ direct_abstract_declarator:
 statement:
 	  labeled_statement
 	| expression_statement
-	| compound_statement
+	| block
 	| selection_statement
 	| iteration_statement
 	| jump_statement
@@ -276,7 +276,7 @@ expression_statement:
 	| ';'
 	;
 
-compound_statement:
+block:
 	'{' declaration_list statement_list '}'
 	| '{' statement_list '}'
 	| '{' declaration_list	'}'
