@@ -42,8 +42,8 @@
 "'"."'"                                                                  {yylval.s = yytext; return CHARACTER;}
 [a-zA-z_][a-zA-z_0-9]*                                                   {return IDENTIFIER;}
 ["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return STRING;}
-"//"(\\.|[^\n])*[\n]                                                     ;
-[/][*]([^*]|[*]*[^*/])*[*]+[/]                                           ;
+"//"(\\.|[^\n])*                                                         {printt("comment", yytext);};
+[/][*]([^*]|[*]*[^*/])*[*]+[/]                                           {printt("comment", yytext);};
 [ \t\n]                                                                  ;
 %%
 
