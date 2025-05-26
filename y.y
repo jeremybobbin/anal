@@ -185,7 +185,8 @@ direct_declarator:
 	| '(' declarator ')'
 	| direct_declarator '[' const_expression ']'
 	| direct_declarator '['	']'
-	| direct_declarator '(' param_type_list ')'
+	| direct_declarator '(' param_list ')'
+	| direct_declarator '(' param_list ',' REST ')'
 	| direct_declarator '(' identifier_list ')'
 	| direct_declarator '('	')'
 	;
@@ -200,11 +201,6 @@ pointer:
 type_qualifier_list:
 	  QUALITY
 	| type_qualifier_list QUALITY
-	;
-
-param_type_list:
-	  param_list
-	| param_list ',' REST
 	;
 
 param_list:
@@ -251,8 +247,10 @@ direct_abstract_declarator:
 	| '[' const_expression ']'
 	| direct_abstract_declarator '[' ']'
 	| '[' ']'
-	| direct_abstract_declarator '(' param_type_list ')'
-	| '(' param_type_list ')'
+	| direct_abstract_declarator '(' param_list ')'
+	| direct_abstract_declarator '(' param_list ',' REST ')'
+	| '(' param_list ')'
+	| '(' param_list ',' REST ')'
 	| direct_abstract_declarator '(' ')'
 	| '(' ')'
 	;
