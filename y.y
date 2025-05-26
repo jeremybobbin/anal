@@ -69,7 +69,7 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> INTEGER CHARACTER FLOATING_POINT IDENTIFIER STRING enumeration_const PRIMATIVE QUALITY PREPROCESSOR ASSIGNMENT_OPERATOR
+%token <s> INTEGER CHARACTER FLOATING_POINT IDENTIFIER STRING PRIMATIVE QUALITY PREPROCESSOR ASSIGNMENT_OPERATOR
 %token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE RIGHT LEFT rel_const INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
@@ -432,7 +432,6 @@ primary_expression:
 	| INTEGER           {  printt("integer",   $1); }
 	| CHARACTER         {  printt("character", $1); }
 	| FLOATING_POINT    {  printt("float",     $1); }
-	| enumeration_const {  printt("variant",   $1); }
 	| STRING            {  printt("string",    $1); }
 	| '(' expression ')'
 	;
