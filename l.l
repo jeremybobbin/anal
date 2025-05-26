@@ -5,10 +5,10 @@
 %}
 
 %%
-"#"(\\.|[^\n])*                                                          {return preprocessor;}
+"#"(\\.|[^\n])*                                                          {return PREPROCESSOR;}
 "typedef"                                                                {return TYPEDEF;}
-"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return primative;}
-"const"|"volatile"|"register"|"static"|"extern"                          {return quality;}
+"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return PRIMATIVE;}
+"const"|"volatile"|"register"|"static"|"extern"                          {return QUALITY;}
 "enum"                                                                   {return ENUM;}
 "case"                                                                   {return CASE;}	
 "default"                                                                {return DEFAULT;}
@@ -35,11 +35,11 @@
 "--"                                                                     {return DECREMENT;}
 "->"                                                                     {return ARROW;}
 [][)(}{><;=*+-/?:&^!~%]                                                  {return yytext[0];}
-"*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return assignment_operator;}
+"*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return ASSIGNMENT_OPERATOR;}
 [0-9]+                                                                   {yylval.s = yytext; return INTEGER;}
 [0-9]*"."[0-9]+                                                          {yylval.s = yytext; return FLOATING_POINT;}	
 "'"."'"                                                                  {yylval.s = yytext; return CHARACTER;}
-[a-zA-z_][a-zA-z_0-9]*                                                   {return identifier;}
+[a-zA-z_][a-zA-z_0-9]*                                                   {return IDENTIFIER;}
 ["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return STRING;}
 "//"(\\.|[^\n])*[\n]                                                     ;
 [/][*]([^*]|[*]*[^*/])*[*]+[/]                                           ;

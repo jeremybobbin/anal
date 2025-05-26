@@ -69,7 +69,7 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> INTEGER CHARACTER FLOATING_POINT identifier STRING enumeration_const primative quality preprocessor assignment_operator
+%token <s> INTEGER CHARACTER FLOATING_POINT IDENTIFIER STRING enumeration_const PRIMATIVE QUALITY PREPROCESSOR ASSIGNMENT_OPERATOR
 %token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE RIGHT LEFT rel_const INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
@@ -111,23 +111,23 @@ declaration_specs:
 	| TYPEDEF
 	| type_spec declaration_specs
 	| type_spec
-	| quality declaration_specs
-	| quality
+	| QUALITY declaration_specs
+	| QUALITY
 	;
 
 type_spec:
-	  primative
+	  PRIMATIVE
 	| struct_or_union_spec
 	| enum_spec
 	;
 
 struct_or_union_spec:
-	  STRUCT identifier '{' struct_declaration_list '}'
+	  STRUCT IDENTIFIER '{' struct_declaration_list '}'
 	| STRUCT '{' struct_declaration_list '}'
-	| STRUCT identifier
-	| UNION identifier '{' struct_declaration_list '}'
+	| STRUCT IDENTIFIER
+	| UNION IDENTIFIER '{' struct_declaration_list '}'
 	| UNION '{' struct_declaration_list '}'
-	| UNION identifier
+	| UNION IDENTIFIER
 	;
 
 struct_declaration_list:
@@ -152,8 +152,8 @@ struct_declaration:
 spec_qualifier_list:
 	  type_spec spec_qualifier_list
 	| type_spec
-	| quality spec_qualifier_list
-	| quality
+	| QUALITY spec_qualifier_list
+	| QUALITY
 	;
 
 struct_declarator_list:
@@ -168,9 +168,9 @@ struct_declarator:
 	;
 
 enum_spec:
-	  ENUM identifier '{' enumerator_list '}'
+	  ENUM IDENTIFIER '{' enumerator_list '}'
 	| ENUM '{' enumerator_list '}'
-	| ENUM identifier
+	| ENUM IDENTIFIER
 	;
 
 enumerator_list:
@@ -179,8 +179,8 @@ enumerator_list:
 	;
 
 enumerator:
-	  identifier
-	| identifier '=' const_expression
+	  IDENTIFIER
+	| IDENTIFIER '=' const_expression
 	;
 
 declarator:
@@ -189,7 +189,7 @@ declarator:
 	;
 
 direct_declarator:
-	  identifier
+	  IDENTIFIER
 	| '(' declarator ')'
 	| direct_declarator '[' const_expression ']'
 	| direct_declarator '['	']'
@@ -206,8 +206,8 @@ pointer:
 	;
 
 type_qualifier_list:
-	  quality
-	| type_qualifier_list quality
+	  QUALITY
+	| type_qualifier_list QUALITY
 	;
 
 param_type_list:
@@ -227,8 +227,8 @@ param_declaration:
 	;
 
 id_list:
-	  identifier
-	| id_list ',' identifier
+	  IDENTIFIER
+	| id_list ',' IDENTIFIER
 	;
 
 initializer:
@@ -275,7 +275,7 @@ statement:
 	;
 
 labeled_statement:
-	  identifier ':' statement
+	  IDENTIFIER ':' statement
 	| CASE const_expression ':' statement
 	| DEFAULT ':' statement
 	;
@@ -316,7 +316,7 @@ iteration_statement:
 	;
 
 jump_statement:
-	  GOTO identifier ';'
+	  GOTO IDENTIFIER ';'
 	| CONTINUE ';'
 	| BREAK ';'
 	| RETURN expression ';'
@@ -330,7 +330,7 @@ expression:
 
 assignment_expression:
 	  conditional_expression
-	| unary_expression assignment_operator assignment_expression
+	| unary_expression ASSIGNMENT_OPERATOR assignment_expression
 	| unary_expression '=' assignment_expression
 	;
 
@@ -421,17 +421,17 @@ postfix_expression:
 	| postfix_expression '[' expression ']'
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '(' ')'
-	| postfix_expression '.' identifier
-	| postfix_expression ARROW identifier
+	| postfix_expression '.' IDENTIFIER
+	| postfix_expression ARROW IDENTIFIER
 	| postfix_expression INCREMENT
 	| postfix_expression DECREMENT
 	;
 
 primary_expression:
-	  identifier
-	| INTEGER         {  printt("integer",   $1); }
-	| CHARACTER        {  printt("character", $1); }
-	| FLOATING_POINT       {  printt("float",     $1); }
+	  IDENTIFIER
+	| INTEGER           {  printt("integer",   $1); }
+	| CHARACTER         {  printt("character", $1); }
+	| FLOATING_POINT    {  printt("float",     $1); }
 	| enumeration_const {  printt("variant",   $1); }
 	| STRING            {  printt("string",    $1); }
 	| '(' expression ')'
