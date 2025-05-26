@@ -5,10 +5,10 @@
 %}
 
 %%
-"#"(\\.|[^\n])*                                                          {return PREPROCESSOR;}
+"#"(\\.|[^\n])*                                                          {yylval.s = yytext; return PREPROCESSOR;}
 "typedef"                                                                {return TYPEDEF;}
-"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return PRIMATIVE;}
-"const"|"volatile"|"register"|"static"|"extern"                          {return QUALITY;}
+"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {yylval.s = yytext; return PRIMATIVE;}
+"const"|"volatile"|"register"|"static"|"extern"                          {yylval.s = yytext; return QUALITY;}
 "enum"                                                                   {return ENUM;}
 "case"                                                                   {return CASE;}	
 "default"                                                                {return DEFAULT;}
@@ -28,8 +28,8 @@
 "||"                                                                     {return OR;}
 "&&"                                                                     {return AND;}
 "..."                                                                    {return REST;}
-[<>]=?                                                                   {return COMPARE;}
-[!=]=                                                                    {return CONTRAST;}
+[<>]=?                                                                   {yylval.s = yytext; return COMPARE;}
+[!=]=                                                                    {yylval.s = yytext; return CONTRAST;}
 "<<"                                                                     {return LEFT;}
 ">>"                                                                     {return RIGHT;}
 "++"                                                                     {return INCREMENT;}
