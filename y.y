@@ -69,7 +69,7 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> int_const char_const float_const identifier string enumeration_const primative quality preprocessor assignment_operator
+%token <s> INTEGER CHARACTER FLOATING_POINT identifier STRING enumeration_const primative quality preprocessor assignment_operator
 %token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE RIGHT LEFT rel_const INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
@@ -429,11 +429,11 @@ postfix_expression:
 
 primary_expression:
 	  identifier
-	| int_const         {  printt("integer",   $1); }
-	| char_const        {  printt("character", $1); }
-	| float_const       {  printt("float",     $1); }
+	| INTEGER         {  printt("integer",   $1); }
+	| CHARACTER        {  printt("character", $1); }
+	| FLOATING_POINT       {  printt("float",     $1); }
 	| enumeration_const {  printt("variant",   $1); }
-	| string            {  printt("string",    $1); }
+	| STRING            {  printt("string",    $1); }
 	| '(' expression ')'
 	;
 

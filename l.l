@@ -36,11 +36,11 @@
 "->"                                                                     {return ARROW;}
 [][)(}{><;=*+-/?:&^!~%]                                                  {return yytext[0];}
 "*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return assignment_operator;}
-[0-9]+                                                                   {yylval.s = yytext; return int_const;}
-[0-9]*"."[0-9]+                                                          {yylval.s = yytext; return float_const;}	
-"'"."'"                                                                  {yylval.s = yytext; return char_const;}
+[0-9]+                                                                   {yylval.s = yytext; return INTEGER;}
+[0-9]*"."[0-9]+                                                          {yylval.s = yytext; return FLOATING_POINT;}	
+"'"."'"                                                                  {yylval.s = yytext; return CHARACTER;}
 [a-zA-z_][a-zA-z_0-9]*                                                   {return identifier;}
-["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return string;}
+["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return STRING;}
 "//"(\\.|[^\n])*[\n]                                                     ;
 [/][*]([^*]|[*]*[^*/])*[*]+[/]                                           ;
 [ \t\n]                                                                  ;
