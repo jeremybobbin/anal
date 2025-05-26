@@ -9,7 +9,7 @@
 "typedef"                                                                {return TYPEDEF;}
 "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return primative;}
 "const"|"volatile"|"register"|"static"|"extern"                          {return quality;}
-"enum"                                                                   {return enum_const;}
+"enum"                                                                   {return ENUM;}
 "case"                                                                   {return CASE;}	
 "default"                                                                {return DEFAULT;}
 "if"                                                                     {return IF;}
