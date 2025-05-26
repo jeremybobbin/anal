@@ -75,13 +75,7 @@ int printt(char *type, char *token) {
 
 %left THEN ELSE
 
-//%start program_unit
-
 %%
-program_unit:
-	  PREPROCESSOR program_unit
-	| translation_unit
-	;
 translation_unit:
 	  external_declaration
 	| translation_unit external_declaration
