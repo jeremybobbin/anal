@@ -70,8 +70,8 @@ int printt(char *type, char *token) {
 }
 
 %token <s> int_const char_const float_const identifier string enumeration_const primative quality preprocessor assignment_operator
-%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND eq_const shift_const rel_const inc_const
-%token <s> point_const REST ELSE
+%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE RIGHT LEFT rel_const INCREMENT DECREMENT
+%token <s> ARROW REST ELSE
 
 %left '+' '-'
 %left '*' '/'
@@ -369,7 +369,7 @@ and_expression:
 
 equality_expression:
 	  relational_expression
-	| equality_expression eq_const relational_expression
+	| equality_expression COMPARE relational_expression
 	;
 
 relational_expression:
@@ -381,7 +381,8 @@ relational_expression:
 
 shift_expression:
 	  additive_expression
-	| shift_expression shift_const additive_expression
+	| shift_expression RIGHT additive_expression
+	| shift_expression LEFT additive_expression
 	;
 
 additive_expression:
@@ -404,7 +405,8 @@ cast_expression:
 
 unary_expression:
 	  postfix_expression
-	| inc_const unary_expression
+	| INCREMENT unary_expression
+	| DECREMENT unary_expression
 	| unary_operator cast_expression
 	| SIZEOF unary_expression
 	| SIZEOF '(' type_name ')'
@@ -420,8 +422,9 @@ postfix_expression:
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '(' ')'
 	| postfix_expression '.' identifier
-	| postfix_expression point_const identifier
-	| postfix_expression inc_const
+	| postfix_expression ARROW identifier
+	| postfix_expression INCREMENT
+	| postfix_expression DECREMENT
 	;
 
 primary_expression:

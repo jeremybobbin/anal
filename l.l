@@ -28,11 +28,12 @@
 "||"                                                                     {return OR;}
 "&&"                                                                     {return AND;}
 "..."                                                                    {return REST;}
-"=="|"!="                                                                {return eq_const;}
-"<="|">="                                                                {return rel_const;}
-">>"|"<<"                                                                {return shift_const;}
-"++"|"--"                                                                {return inc_const;}
-"->"                                                                     {return point_const;}
+[<>!=]=                                                                  {return COMPARE;}
+"<<"                                                                     {return LEFT;}
+">>"                                                                     {return RIGHT;}
+"++"                                                                     {return INCREMENT;}
+"--"                                                                     {return DECREMENT;}
+"->"                                                                     {return ARROW;}
 [][)(}{><;=*+-/?:&^!~%]                                                  {return yytext[0];}
 "*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return assignment_operator;}
 [0-9]+                                                                   {yylval.s = yytext; return int_const;}
