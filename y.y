@@ -87,10 +87,10 @@ external_declaration:
 	;
 
 function_definition:
-	  declaration_specs declarator declaration_list compound_stat
-	| declarator declaration_list compound_stat
-	| declaration_specs declarator	compound_stat
-	| declarator compound_stat
+	  declaration_specs declarator declaration_list compound_statement
+	| declarator declaration_list compound_statement
+	| declaration_specs declarator	compound_statement
+	| declarator compound_statement
 	;
 
 declaration:
@@ -169,8 +169,8 @@ struct_declarator_list:
 
 struct_declarator:
 	  declarator
-	| declarator ':' const_exp
-	| ':' const_exp
+	| declarator ':' const_expression
+	| ':' const_expression
 	;
 
 enum_spec:
@@ -186,7 +186,7 @@ enumerator_list:
 
 enumerator:
 	  id
-	| id '=' const_exp
+	| id '=' const_expression
 	;
 
 declarator:
@@ -197,7 +197,7 @@ declarator:
 direct_declarator:
 	  id
 	| '(' declarator ')'
-	| direct_declarator '[' const_exp ']'
+	| direct_declarator '[' const_expression ']'
 	| direct_declarator '['	']'
 	| direct_declarator '(' param_type_list ')'
 	| direct_declarator '(' id_list ')'
@@ -238,7 +238,7 @@ id_list:
 	;
 
 initializer:
-	  assignment_exp
+	  assignment_expression
 	| '{' initializer_list '}'
 	| '{' initializer_list ',' '}'
 	;
@@ -261,8 +261,8 @@ abstract_declarator:
 
 direct_abstract_declarator:
 	  '(' abstract_declarator ')'
-	| direct_abstract_declarator '[' const_exp ']'
-	| '[' const_exp ']'
+	| direct_abstract_declarator '[' const_expression ']'
+	| '[' const_expression ']'
 	| direct_abstract_declarator '[' ']'
 	| '[' ']'
 	| direct_abstract_declarator '(' param_type_list ')'
@@ -271,72 +271,72 @@ direct_abstract_declarator:
 	| '(' ')'
 	;
 
-stat:
-	  labeled_stat
-	| exp_stat
-	| compound_stat
-	| selection_stat
-	| iteration_stat
-	| jump_stat
+statement:
+	  labeled_statement
+	| expression_statement
+	| compound_statement
+	| selection_statement
+	| iteration_statement
+	| jump_statement
 	;
 
-labeled_stat:
-	  id ':' stat
-	| CASE const_exp ':' stat
-	| DEFAULT ':' stat
+labeled_statement:
+	  id ':' statement
+	| CASE const_expression ':' statement
+	| DEFAULT ':' statement
 	;
 
-exp_stat:
-	  exp ';'
+expression_statement:
+	  expression ';'
 	| ';'
 	;
 
-compound_stat:
-	'{' declaration_list stat_list '}'
-	| '{' stat_list '}'
+compound_statement:
+	'{' declaration_list statement_list '}'
+	| '{' statement_list '}'
 	| '{' declaration_list	'}'
 	| '{' '}'
 	;
 
-stat_list:
-	  stat
-	| stat_list stat
+statement_list:
+	  statement
+	| statement_list statement
 	;
 
-selection_stat:
-	  IF '(' exp ')' stat ELSE stat
-	| IF '(' exp ')' stat
-	| SWITCH '(' exp ')' stat
+selection_statement:
+	  IF '(' expression ')' statement ELSE statement
+	| IF '(' expression ')' statement
+	| SWITCH '(' expression ')' statement
 	;
-iteration_stat:
-	  WHILE '(' exp ')' stat
-	| DO stat WHILE '(' exp ')' ';'
-	| FOR '(' exp ';' exp ';' exp ')' stat
-	| FOR '(' exp ';' exp ';'	')' stat
-	| FOR '(' exp ';' ';' exp ')' stat
-	| FOR '(' exp ';' ';' ')' stat
-	| FOR '(' ';' exp ';' exp ')' stat
-	| FOR '(' ';' exp ';' ')' stat
-	| FOR '(' ';' ';' exp ')' stat
-	| FOR '(' ';' ';' ')' stat
+iteration_statement:
+	  WHILE '(' expression ')' statement
+	| DO statement WHILE '(' expression ')' ';'
+	| FOR '(' expression ';' expression ';' expression ')' statement
+	| FOR '(' expression ';' expression ';'	')' statement
+	| FOR '(' expression ';' ';' expression ')' statement
+	| FOR '(' expression ';' ';' ')' statement
+	| FOR '(' ';' expression ';' expression ')' statement
+	| FOR '(' ';' expression ';' ')' statement
+	| FOR '(' ';' ';' expression ')' statement
+	| FOR '(' ';' ';' ')' statement
 	;
 
-jump_stat:
+jump_statement:
 	  GOTO id ';'
 	| CONTINUE ';'
 	| BREAK ';'
-	| RETURN exp ';'
+	| RETURN expression ';'
 	| RETURN ';'
 	;
 
-exp:
-	  assignment_exp
-	| exp ',' assignment_exp
+expression:
+	  assignment_expression
+	| expression ',' assignment_expression
 	;
 
-assignment_exp:
-	  conditional_exp
-	| unary_exp assignment_operator assignment_exp
+assignment_expression:
+	  conditional_expression
+	| unary_expression assignment_operator assignment_expression
 	;
 
 assignment_operator:
@@ -344,79 +344,79 @@ assignment_operator:
 	| '='
 	;
 
-conditional_exp:
-	  logical_or_exp
-	| logical_or_exp '?' exp ':' conditional_exp
+conditional_expression:
+	  logical_or_expression
+	| logical_or_expression '?' expression ':' conditional_expression
 	;
-const_exp:
-	  conditional_exp
-	;
-
-logical_or_exp:
-	  logical_and_exp
-	| logical_or_exp or_const logical_and_exp
+const_expression:
+	  conditional_expression
 	;
 
-logical_and_exp:
-	  inclusive_or_exp
-	| logical_and_exp and_const inclusive_or_exp
+logical_or_expression:
+	  logical_and_expression
+	| logical_or_expression or_const logical_and_expression
 	;
 
-inclusive_or_exp:
-	  exclusive_or_exp
-	| inclusive_or_exp '|' exclusive_or_exp
+logical_and_expression:
+	  inclusive_or_expression
+	| logical_and_expression and_const inclusive_or_expression
 	;
 
-exclusive_or_exp:
-	  and_exp
-	| exclusive_or_exp '^' and_exp
+inclusive_or_expression:
+	  exclusive_or_expression
+	| inclusive_or_expression '|' exclusive_or_expression
 	;
 
-and_exp:
-	  equality_exp
-	| and_exp '&' equality_exp
+exclusive_or_expression:
+	  and_expression
+	| exclusive_or_expression '^' and_expression
 	;
 
-equality_exp:
-	  relational_exp
-	| equality_exp eq_const relational_exp
+and_expression:
+	  equality_expression
+	| and_expression '&' equality_expression
 	;
 
-relational_exp:
+equality_expression:
+	  relational_expression
+	| equality_expression eq_const relational_expression
+	;
+
+relational_expression:
 	  shift_expression
-	| relational_exp '<' shift_expression
-	| relational_exp '>' shift_expression
-	| relational_exp rel_const shift_expression
+	| relational_expression '<' shift_expression
+	| relational_expression '>' shift_expression
+	| relational_expression rel_const shift_expression
 	;
 
 shift_expression:
-	  additive_exp
-	| shift_expression shift_const additive_exp
+	  additive_expression
+	| shift_expression shift_const additive_expression
 	;
 
-additive_exp:
-	  mult_exp
-	| additive_exp '+' mult_exp
-	| additive_exp '-' mult_exp
+additive_expression:
+	  mult_expression
+	| additive_expression '+' mult_expression
+	| additive_expression '-' mult_expression
 	;
 
-mult_exp:
-	  cast_exp
-	| mult_exp '*' cast_exp
-	| mult_exp '/' cast_exp
-	| mult_exp '%' cast_exp
+mult_expression:
+	  cast_expression
+	| mult_expression '*' cast_expression
+	| mult_expression '/' cast_expression
+	| mult_expression '%' cast_expression
 	;
 
-cast_exp:
-	  unary_exp
-	| '(' type_name ')' cast_exp
+cast_expression:
+	  unary_expression
+	| '(' type_name ')' cast_expression
 	;
 
-unary_exp:
-	  postfix_exp
-	| inc_const unary_exp
-	| unary_operator cast_exp
-	| SIZEOF unary_exp
+unary_expression:
+	  postfix_expression
+	| inc_const unary_expression
+	| unary_operator cast_expression
+	| SIZEOF unary_expression
 	| SIZEOF '(' type_name ')'
 	;
 
@@ -424,29 +424,29 @@ unary_operator:
 	'&' | '*' | '+' | '-' | '~' | '!'
 	;
 
-postfix_exp:
-	  primary_exp
-	| postfix_exp '[' exp ']'
-	| postfix_exp '(' argument_exp_list ')'
-	| postfix_exp '(' ')'
-	| postfix_exp '.' id
-	| postfix_exp point_const id
-	| postfix_exp inc_const
+postfix_expression:
+	  primary_expression
+	| postfix_expression '[' expression ']'
+	| postfix_expression '(' argument_expression_list ')'
+	| postfix_expression '(' ')'
+	| postfix_expression '.' id
+	| postfix_expression point_const id
+	| postfix_expression inc_const
 	;
 
-primary_exp:
+primary_expression:
 	  id
 	| int_const         {  printt("integer",   $1); }
 	| char_const        {  printt("character", $1); }
 	| float_const       {  printt("float",     $1); }
 	| enumeration_const {  printt("variant",   $1); }
 	| string            {  printt("string",    $1); }
-	| '(' exp ')'
+	| '(' expression ')'
 	;
 
-argument_exp_list:
-	  assignment_exp
-	| argument_exp_list ',' assignment_exp
+argument_expression_list:
+	  assignment_expression
+	| argument_expression_list ',' assignment_expression
 	;
 %%
 
