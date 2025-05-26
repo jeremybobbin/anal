@@ -67,6 +67,7 @@ int printt(char *type, char *token) {
 
 %union {
 	char *s;
+	char c;
 }
 
 %token <s> INTEGER CHARACTER FLOATING_POINT IDENTIFIER STRING PRIMATIVE QUALITY PREPROCESSOR ASSIGNMENT_OPERATOR

@@ -35,7 +35,7 @@
 "++"                                                                     {return INCREMENT;}
 "--"                                                                     {return DECREMENT;}
 "->"                                                                     {return ARROW;}
-[][)(}{;=*+-/?:&^!~%]                                                    {return yytext[0];}
+[][)(}{;=*+-/?:&^!~%]                                                    {yylval.c = yytext[0]; return yytext[0];}
 "*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return ASSIGNMENT_OPERATOR;}
 [0-9]+                                                                   {yylval.s = yytext; return INTEGER;}
 [0-9]*"."[0-9]+                                                          {yylval.s = yytext; return FLOATING_POINT;}	
