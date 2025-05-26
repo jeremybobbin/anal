@@ -66,7 +66,7 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> int_const char_const float_const id string enumeration_const storage_const type_const qual_const struct_const enum_const PREPROCESSOR
+%token <s> int_const char_const float_const id string enumeration_const storage_const primative quality struct_const enum_const PREPROCESSOR
 %token IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF PUNC or_const and_const eq_const shift_const rel_const inc_const
 %token <s> point_const param_const ELSE
 
@@ -108,8 +108,8 @@ declaration_specs:
 	| storage_class_spec
 	| type_spec declaration_specs
 	| type_spec
-	| type_qualifier declaration_specs
-	| type_qualifier
+	| quality declaration_specs
+	| quality
 	;
 
 storage_class_spec:
@@ -117,13 +117,9 @@ storage_class_spec:
 	;
 
 type_spec:
-	  type_const
+	  primative
 	| struct_or_union_spec
 	| enum_spec
-	;
-
-type_qualifier:
-	  qual_const
 	;
 
 struct_or_union_spec:
@@ -158,8 +154,8 @@ struct_declaration:
 spec_qualifier_list:
 	  type_spec spec_qualifier_list
 	| type_spec
-	| type_qualifier spec_qualifier_list
-	| type_qualifier
+	| quality spec_qualifier_list
+	| quality
 	;
 
 struct_declarator_list:
@@ -212,8 +208,8 @@ pointer:
 	;
 
 type_qualifier_list:
-	  type_qualifier
-	| type_qualifier_list type_qualifier
+	  quality
+	| type_qualifier_list quality
 	;
 
 param_type_list:

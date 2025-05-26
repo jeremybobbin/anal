@@ -7,8 +7,8 @@
 %%
 "#"(\\.|[^\n])*                                                          {return PREPROCESSOR;}
 "register"|"static"|"extern"|"typedef"                                   {return storage_const;}
-"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return type_const;}	
-"const"|"volatile"                                                       {return qual_const;}
+"void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return primative;}
+"const"|"volatile"                                                       {return quality;}
 "enum"                                                                   {return enum_const;}
 "case"                                                                   {return CASE;}	
 "default"                                                                {return DEFAULT;}
