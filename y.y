@@ -66,8 +66,8 @@ int printt(char *type, char *token) {
 	char *s;
 }
 
-%token <s> int_const char_const float_const id string enumeration_const primative quality struct_const PREPROCESSOR
-%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF PUNC ENUM or_const and_const eq_const shift_const rel_const inc_const
+%token <s> int_const char_const float_const id string enumeration_const primative quality struct_const preprocessor assignment_operator 
+%token TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM or_const and_const eq_const shift_const rel_const inc_const
 %token <s> point_const param_const ELSE
 
 %left '+' '-'
@@ -329,11 +329,7 @@ expression:
 assignment_expression:
 	  conditional_expression
 	| unary_expression assignment_operator assignment_expression
-	;
-
-assignment_operator:
-	  PUNC
-	| '='
+	| unary_expression '=' assignment_expression
 	;
 
 conditional_expression:

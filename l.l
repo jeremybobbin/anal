@@ -5,7 +5,7 @@
 %}
 
 %%
-"#"(\\.|[^\n])*                                                          {return PREPROCESSOR;}
+"#"(\\.|[^\n])*                                                          {return preprocessor;}
 "typedef"                                                                {return TYPEDEF;}
 "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {return primative;}
 "const"|"volatile"|"register"|"static"|"extern"                          {return quality;}
@@ -33,7 +33,7 @@
 "++"|"--"                                                                {return inc_const;}
 "->"                                                                     {return point_const;}
 [][)(}{><;=*+-/?:&^!~%]                                                  {return yytext[0];}
-"*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return PUNC;}
+"*="|"/="|"+="|"%="|">>="|"-="|"<<="|"&="|"^="|"|="                      {return assignment_operator;}
 [0-9]+                                                                   {yylval.s = yytext; return int_const;}
 [0-9]*"."[0-9]+                                                          {yylval.s = yytext; return float_const;}	
 "'"."'"                                                                  {yylval.s = yytext; return char_const;}
