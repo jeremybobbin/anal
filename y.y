@@ -83,38 +83,38 @@ program_unit:
 	| translation_unit
 	;
 translation_unit:
-	  external_decl
-	| translation_unit external_decl
+	  external_declaration
+	| translation_unit external_declaration
 	;
 
-external_decl:
+external_declaration:
 	  function_definition
-	| decl
+	| declaration
 	;
 
 function_definition:
-	  decl_specs declarator decl_list compound_stat
-	| declarator decl_list compound_stat
-	| decl_specs declarator	compound_stat
+	  declaration_specs declarator declaration_list compound_stat
+	| declarator declaration_list compound_stat
+	| declaration_specs declarator	compound_stat
 	| declarator compound_stat
 	;
 
-decl:
-	  decl_specs init_declarator_list ';'
-	| decl_specs ';'
+declaration:
+	  declaration_specs init_declarator_list ';'
+	| declaration_specs ';'
 	;
 
-decl_list:
-	  decl
-	| decl_list decl
+declaration_list:
+	  declaration
+	| declaration_list declaration
 	;
 
-decl_specs:
-	  storage_class_spec decl_specs
+declaration_specs:
+	  storage_class_spec declaration_specs
 	| storage_class_spec
-	| type_spec decl_specs
+	| type_spec declaration_specs
 	| type_spec
-	| type_qualifier decl_specs
+	| type_qualifier declaration_specs
 	| type_qualifier
 	;
 
@@ -133,8 +133,8 @@ type_qualifier:
 	;
 
 struct_or_union_spec:
-	  struct_or_union id '{' struct_decl_list '}'
-	| struct_or_union '{' struct_decl_list '}'
+	  struct_or_union id '{' struct_declaration_list '}'
+	| struct_or_union '{' struct_declaration_list '}'
 	| struct_or_union id
 	;
 
@@ -142,9 +142,9 @@ struct_or_union:
 	  struct_const
 	;
 
-struct_decl_list:
-	  struct_decl
-	| struct_decl_list struct_decl
+struct_declaration_list:
+	  struct_declaration
+	| struct_declaration_list struct_declaration
 	;
 
 init_declarator_list:
@@ -157,7 +157,7 @@ init_declarator:
 	| declarator '=' initializer
 	;
 
-struct_decl:
+struct_declaration:
 	  spec_qualifier_list struct_declarator_list ';'
 	;
 
@@ -228,14 +228,14 @@ param_type_list:
 	;
 
 param_list:
-	  param_decl
-	| param_list ',' param_decl
+	  param_declaration
+	| param_list ',' param_declaration
 	;
 
-param_decl:
-	  decl_specs declarator
-	| decl_specs abstract_declarator
-	| decl_specs
+param_declaration:
+	  declaration_specs declarator
+	| declaration_specs abstract_declarator
+	| declaration_specs
 	;
 
 id_list:
@@ -298,9 +298,9 @@ exp_stat:
 	;
 
 compound_stat:
-	'{' decl_list stat_list '}'
+	'{' declaration_list stat_list '}'
 	| '{' stat_list '}'
-	| '{' decl_list	'}'
+	| '{' declaration_list	'}'
 	| '{' '}'
 	;
 
