@@ -330,6 +330,7 @@ conditional_expression:
 	  logical_or_expression
 	| logical_or_expression '?' expression ':' conditional_expression
 	;
+
 const_expression:
 	  conditional_expression
 	;
@@ -370,22 +371,22 @@ relational_expression:
 	;
 
 shift_expression:
-	  additive_expression
-	| shift_expression RIGHT additive_expression
-	| shift_expression LEFT additive_expression
+	  addition_expression
+	| shift_expression RIGHT addition_expression
+	| shift_expression LEFT addition_expression
 	;
 
-additive_expression:
-	  mult_expression
-	| additive_expression '+' mult_expression
-	| additive_expression '-' mult_expression
+addition_expression:
+	  multiplication_expression
+	| addition_expression '+' multiplication_expression
+	| addition_expression '-' multiplication_expression
 	;
 
-mult_expression:
+multiplication_expression:
 	  cast_expression
-	| mult_expression '*' cast_expression
-	| mult_expression '/' cast_expression
-	| mult_expression '%' cast_expression
+	| multiplication_expression '*' cast_expression
+	| multiplication_expression '/' cast_expression
+	| multiplication_expression '%' cast_expression
 	;
 
 cast_expression:
