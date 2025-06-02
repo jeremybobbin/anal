@@ -74,6 +74,8 @@ int printt(char *type, char *token) {
 %token <s> TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE CONTRAST RIGHT LEFT INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
+%left ','
+%left '=' ASSIGNMENT_OPERATOR
 %left OR
 %left AND
 %left '|'
@@ -301,6 +303,7 @@ selection_statement:
 	| IF '(' expression ')' statement
 	| SWITCH '(' expression ')' statement
 	;
+
 iteration_statement:
 	  WHILE '(' expression ')' statement
 	| DO statement WHILE '(' expression ')' ';'
