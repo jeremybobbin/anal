@@ -102,18 +102,18 @@ external_declaration:
 	;
 
 function_definition:
-	  declaration_specs declarator declarations block
-	| declarator declarations block
-	| declaration_specs declarator	block
-	| declarator block
+	  declarator declaratee declarations block
+	| declaratee declarations block
+	| declarator declaratee	block
+	| declaratee block
 	;
 
 declaration:
-	  declaration_specs declarator
-	| declaration_specs declarator '=' initializer
-	| declaration_specs declarator ',' declarator
-	| declaration_specs declarator '=' initializer ',' declarator '=' initializer
-	| declaration_specs
+	  declarator declaratee
+	| declarator declaratee '=' initializer
+	| declarator declaratee ',' declaratee
+	| declarator declaratee '=' initializer ',' declaratee '=' initializer
+	| declarator
 	;
 
 declarations:
@@ -121,11 +121,11 @@ declarations:
 	| declarations declaration ';'
 	;
 
-declaration_specs:
-	  TYPEDEF declaration_specs
-	| type declaration_specs
-	| STORAGE_CLASS declaration_specs
-	| QUALITY declaration_specs
+declarator:
+	  TYPEDEF declarator
+	| type declarator
+	| STORAGE_CLASS declarator
+	| QUALITY declarator
 	| STORAGE_CLASS
 	| TYPEDEF
 	| type
@@ -151,7 +151,7 @@ struct_declarations:
 	;
 
 struct_declaration:
-	  qualifiers struct_declarators ';'
+	  qualifiers struct_declaratees ';'
 	;
 
 qualifiers:
@@ -161,14 +161,14 @@ qualifiers:
 	| QUALITY
 	;
 
-struct_declarators:
-	  struct_declarator
-	| struct_declarators ',' struct_declarator
+struct_declaratees:
+	  struct_declaratee
+	| struct_declaratees ',' struct_declaratee
 	;
 
-struct_declarator:
-	  declarator
-	| declarator ':' const_expression
+struct_declaratee:
+	  declaratee
+	| declaratee ':' const_expression
 	| ':' const_expression
 	;
 
@@ -182,20 +182,20 @@ enumerator:
 	| IDENTIFIER '=' const_expression
 	;
 
-declarator:
-	  pointer direct_declarator
-	| direct_declarator
+declaratee:
+	  pointer direct_declaratee
+	| direct_declaratee
 	;
 
-direct_declarator:
+direct_declaratee:
 	  IDENTIFIER
-	| '(' declarator ')'
-	| direct_declarator '[' const_expression ']'
-	| direct_declarator '['	']'
-	| direct_declarator '(' parameters ')'
-	| direct_declarator '(' parameters ',' REST ')'
-	| direct_declarator '(' identifiers ')'
-	| direct_declarator '('	')'
+	| '(' declaratee ')'
+	| direct_declaratee '[' const_expression ']'
+	| direct_declaratee '['	']'
+	| direct_declaratee '(' parameters ')'
+	| direct_declaratee '(' parameters ',' REST ')'
+	| direct_declaratee '(' identifiers ')'
+	| direct_declaratee '('	')'
 	;
 
 pointer:
@@ -216,9 +216,9 @@ parameters:
 	;
 
 parameter:
-	  declaration_specs declarator
-	| declaration_specs abstract_declarator
-	| declaration_specs
+	  declarator declaratee
+	| declarator abstract_declaratee
+	| declarator
 	;
 
 identifiers:
@@ -238,27 +238,27 @@ initializers:
 	;
 
 type_name:
-	  qualifiers abstract_declarator
+	  qualifiers abstract_declaratee
 	| qualifiers
 	;
 
-abstract_declarator:
+abstract_declaratee:
 	  pointer
-	| pointer direct_abstract_declarator
-	|	direct_abstract_declarator
+	| pointer direct_abstract_declaratee
+	|	direct_abstract_declaratee
 	;
 
-direct_abstract_declarator:
-	  '(' abstract_declarator ')'
-	| direct_abstract_declarator '[' const_expression ']'
+direct_abstract_declaratee:
+	  '(' abstract_declaratee ')'
+	| direct_abstract_declaratee '[' const_expression ']'
 	| '[' const_expression ']'
-	| direct_abstract_declarator '[' ']'
+	| direct_abstract_declaratee '[' ']'
 	| '[' ']'
-	| direct_abstract_declarator '(' parameters ')'
-	| direct_abstract_declarator '(' parameters ',' REST ')'
+	| direct_abstract_declaratee '(' parameters ')'
+	| direct_abstract_declaratee '(' parameters ',' REST ')'
 	| '(' parameters ')'
 	| '(' parameters ',' REST ')'
-	| direct_abstract_declarator '(' ')'
+	| direct_abstract_declaratee '(' ')'
 	| '(' ')'
 	;
 
