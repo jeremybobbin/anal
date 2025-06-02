@@ -98,7 +98,7 @@ translation_unit:
 
 external_declaration:
 	  function_definition
-	| declaration
+	| declaration ';'
 	;
 
 function_definition:
@@ -109,13 +109,16 @@ function_definition:
 	;
 
 declaration:
-	  declaration_specs initialized_declarators ';'
-	| declaration_specs ';'
+	  declaration_specs declarator
+	| declaration_specs declarator '=' initializer
+	| declaration_specs declarator ',' declarator
+	| declaration_specs declarator '=' initializer ',' declarator '=' initializer
+	| declaration_specs
 	;
 
 declarations:
-	  declaration
-	| declarations declaration
+	  declaration ';'
+	| declarations declaration ';'
 	;
 
 declaration_specs:
@@ -145,13 +148,6 @@ type:
 struct_declarations:
 	  struct_declaration
 	| struct_declarations struct_declaration
-	;
-
-initialized_declarators:
-	  declarator
-	| declarator '=' initializer
-	| initialized_declarators ',' declarator
-	| initialized_declarators ',' declarator '=' initializer
 	;
 
 struct_declaration:
