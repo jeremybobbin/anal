@@ -199,8 +199,8 @@ direct_declaratee:
 	;
 
 pointer:
-	'*' type_qualifiers
-	| '*'
+	  '*'
+	| '*' type_qualifiers
 	| '*' type_qualifiers pointer
 	| '*' pointer
 	;
