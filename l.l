@@ -8,7 +8,8 @@
 "#"(\\.|[^\n])*                                                          {yylval.s = yytext; return PREPROCESSOR;}
 "typedef"                                                                {return TYPEDEF;}
 "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"  {yylval.s = yytext; return PRIMATIVE;}
-"const"|"volatile"|"register"|"static"|"extern"                          {yylval.s = yytext; return QUALITY;}
+"const"|"volatile"                                                       {yylval.s = yytext; return STORAGE_CLASS;}
+"extern"|"static"|"auto"|"register"                                      {yylval.s = yytext; return QUALITY;}
 "enum"                                                                   {return ENUM;}
 "case"                                                                   {return CASE;}	
 "default"                                                                {return DEFAULT;}
