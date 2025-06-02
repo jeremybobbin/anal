@@ -99,7 +99,7 @@ function_definition:
 	;
 
 declaration:
-	  declaration_specs init_declarator_list ';'
+	  declaration_specs initialized_declarators ';'
 	| declaration_specs ';'
 	;
 
@@ -137,14 +137,14 @@ struct_declaration_list:
 	| struct_declaration_list struct_declaration
 	;
 
-init_declarator_list:
-	  init_declarator
-	| init_declarator_list ',' init_declarator
+initialized_declarators:
+	  declarator
+	| declarator '=' initializer
+	| initialized_declarators ',' declarator
+	| initialized_declarators ',' declarator '=' initializer
 	;
 
 init_declarator:
-	  declarator
-	| declarator '=' initializer
 	;
 
 struct_declaration:
