@@ -144,17 +144,14 @@ initialized_declarators:
 	| initialized_declarators ',' declarator '=' initializer
 	;
 
-init_declarator:
-	;
-
 struct_declaration:
-	  spec_qualifier_list struct_declarator_list ';'
+	  qualifiers struct_declarator_list ';'
 	;
 
-spec_qualifier_list:
-	  type spec_qualifier_list
+qualifiers:
+	  type qualifiers
 	| type
-	| QUALITY spec_qualifier_list
+	| QUALITY qualifiers
 	| QUALITY
 	;
 
@@ -235,8 +232,8 @@ initializer_list:
 	;
 
 type_name:
-	  spec_qualifier_list abstract_declarator
-	| spec_qualifier_list
+	  qualifiers abstract_declarator
+	| qualifiers
 	;
 
 abstract_declarator:
