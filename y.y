@@ -74,6 +74,7 @@ int printt(char *type, char *token) {
 %token <s> TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE CONTRAST RIGHT LEFT INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
+%left RIGHT LEFT
 %left '+' '-'
 %left '*' '/'
 
@@ -365,27 +366,19 @@ equality_expression:
 	;
 
 relational_expression:
-	  shift_expression
-	| relational_expression COMPARE shift_expression
-	;
-
-shift_expression:
 	  addition_expression
-	| shift_expression RIGHT addition_expression
-	| shift_expression LEFT addition_expression
+	| relational_expression COMPARE addition_expression
 	;
 
 addition_expression:
-	  multiplication_expression
-	| addition_expression '+' multiplication_expression
-	| addition_expression '-' multiplication_expression
-	;
-
-multiplication_expression:
 	  cast_expression
-	| multiplication_expression '*' cast_expression
-	| multiplication_expression '/' cast_expression
-	| multiplication_expression '%' cast_expression
+	| addition_expression '*'   cast_expression
+	| addition_expression '/'   cast_expression
+	| addition_expression '%'   cast_expression
+	| addition_expression '+'   cast_expression
+	| addition_expression '-'   cast_expression
+	| addition_expression RIGHT cast_expression
+	| addition_expression LEFT  cast_expression
 	;
 
 cast_expression:
