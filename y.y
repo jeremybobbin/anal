@@ -74,6 +74,13 @@ int printt(char *type, char *token) {
 %token <s> TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE CONTRAST RIGHT LEFT INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
+%left OR
+%left AND
+%left '|'
+%left '^'
+%left '&'
+%left COMPARE
+%left CONTRAST
 %left RIGHT LEFT
 %left '+' '-'
 %left '*' '/'
@@ -327,58 +334,30 @@ assignments:
 	;
 
 conditional_expression:
-	  logical_or_expression
-	| logical_or_expression '?' expression ':' conditional_expression
+	  addition_expression
+	| addition_expression '?' expression ':' conditional_expression
 	;
 
 const_expression:
 	  conditional_expression
 	;
 
-logical_or_expression:
-	  logical_and_expression
-	| logical_or_expression OR logical_and_expression
-	;
-
-logical_and_expression:
-	  inclusive_or_expression
-	| logical_and_expression AND inclusive_or_expression
-	;
-
-inclusive_or_expression:
-	  exclusive_or_expression
-	| inclusive_or_expression '|' exclusive_or_expression
-	;
-
-exclusive_or_expression:
-	  and_expression
-	| exclusive_or_expression '^' and_expression
-	;
-
-and_expression:
-	  equality_expression
-	| and_expression '&' equality_expression
-	;
-
-equality_expression:
-	  relational_expression
-	| equality_expression CONTRAST relational_expression
-	;
-
-relational_expression:
-	  addition_expression
-	| relational_expression COMPARE addition_expression
-	;
-
 addition_expression:
 	  cast_expression
-	| addition_expression '*'   cast_expression
-	| addition_expression '/'   cast_expression
-	| addition_expression '%'   cast_expression
-	| addition_expression '+'   cast_expression
-	| addition_expression '-'   cast_expression
-	| addition_expression RIGHT cast_expression
-	| addition_expression LEFT  cast_expression
+	| addition_expression OR       cast_expression
+	| addition_expression AND      cast_expression
+	| addition_expression '|'      cast_expression
+	| addition_expression '^'      cast_expression
+	| addition_expression '&'      cast_expression
+	| addition_expression CONTRAST cast_expression
+	| addition_expression COMPARE  cast_expression
+	| addition_expression RIGHT    cast_expression
+	| addition_expression LEFT     cast_expression
+	| addition_expression '+'      cast_expression
+	| addition_expression '-'      cast_expression
+	| addition_expression '*'      cast_expression
+	| addition_expression '/'      cast_expression
+	| addition_expression '%'      cast_expression
 	;
 
 cast_expression:
