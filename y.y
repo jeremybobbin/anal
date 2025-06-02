@@ -92,8 +92,8 @@ external_declaration:
 	;
 
 function_definition:
-	  declaration_specs declarator declaration_list block
-	| declarator declaration_list block
+	  declaration_specs declarator declarations block
+	| declarator declarations block
 	| declaration_specs declarator	block
 	| declarator block
 	;
@@ -103,9 +103,9 @@ declaration:
 	| declaration_specs ';'
 	;
 
-declaration_list:
+declarations:
 	  declaration
-	| declaration_list declaration
+	| declarations declaration
 	;
 
 declaration_specs:
@@ -121,20 +121,20 @@ declaration_specs:
 
 type:
 	  PRIMATIVE {  printt("primative", $1); }
-	| STRUCT IDENTIFIER '{' struct_declaration_list '}'
-	| STRUCT '{' struct_declaration_list '}'
+	| STRUCT IDENTIFIER '{' struct_declarations '}'
+	| STRUCT '{' struct_declarations '}'
 	| STRUCT IDENTIFIER
-	| UNION IDENTIFIER '{' struct_declaration_list '}'
-	| UNION '{' struct_declaration_list '}'
+	| UNION IDENTIFIER '{' struct_declarations '}'
+	| UNION '{' struct_declarations '}'
 	| UNION IDENTIFIER
-	| ENUM IDENTIFIER '{' enumerator_list '}'
-	| ENUM '{' enumerator_list '}'
+	| ENUM IDENTIFIER '{' enumerators '}'
+	| ENUM '{' enumerators '}'
 	| ENUM IDENTIFIER
 	;
 
-struct_declaration_list:
+struct_declarations:
 	  struct_declaration
-	| struct_declaration_list struct_declaration
+	| struct_declarations struct_declaration
 	;
 
 initialized_declarators:
@@ -145,7 +145,7 @@ initialized_declarators:
 	;
 
 struct_declaration:
-	  qualifiers struct_declarator_list ';'
+	  qualifiers struct_declarators ';'
 	;
 
 qualifiers:
@@ -155,9 +155,9 @@ qualifiers:
 	| QUALITY
 	;
 
-struct_declarator_list:
+struct_declarators:
 	  struct_declarator
-	| struct_declarator_list ',' struct_declarator
+	| struct_declarators ',' struct_declarator
 	;
 
 struct_declarator:
@@ -166,9 +166,9 @@ struct_declarator:
 	| ':' const_expression
 	;
 
-enumerator_list:
+enumerators:
 	  enumerator
-	| enumerator_list ',' enumerator
+	| enumerators ',' enumerator
 	;
 
 enumerator:
@@ -188,7 +188,7 @@ direct_declarator:
 	| direct_declarator '['	']'
 	| direct_declarator '(' parameters ')'
 	| direct_declarator '(' parameters ',' REST ')'
-	| direct_declarator '(' identifier_list ')'
+	| direct_declarator '(' identifiers ')'
 	| direct_declarator '('	')'
 	;
 
@@ -215,20 +215,20 @@ parameter:
 	| declaration_specs
 	;
 
-identifier_list:
+identifiers:
 	  IDENTIFIER
-	| identifier_list ',' IDENTIFIER
+	| identifiers ',' IDENTIFIER
 	;
 
 initializer:
-	  assignment_expression
-	| '{' initializer_list '}'
-	| '{' initializer_list ',' '}'
+	  assignments
+	| '{' initializers '}'
+	| '{' initializers ',' '}'
 	;
 
-initializer_list:
+initializers:
 	  initializer
-	| initializer_list ',' initializer
+	| initializers ',' initializer
 	;
 
 type_name:
@@ -277,15 +277,15 @@ expression_statement:
 	;
 
 block:
-	'{' declaration_list statement_list '}'
-	| '{' statement_list '}'
-	| '{' declaration_list	'}'
+	'{' declarations statements '}'
+	| '{' statements '}'
+	| '{' declarations	'}'
 	| '{' '}'
 	;
 
-statement_list:
+statements:
 	  statement
-	| statement_list statement
+	| statements statement
 	;
 
 selection_statement:
@@ -315,14 +315,14 @@ jump_statement:
 	;
 
 expression:
-	  assignment_expression
-	| expression ',' assignment_expression
+	  assignments
+	| expression ',' assignments
 	;
 
-assignment_expression:
+assignments:
 	  conditional_expression
-	| unary_expression ASSIGNMENT_OPERATOR assignment_expression
-	| unary_expression '=' assignment_expression
+	| unary_expression ASSIGNMENT_OPERATOR assignments
+	| unary_expression '=' assignments
 	;
 
 conditional_expression:
@@ -409,7 +409,7 @@ unary_operator:
 postfix_expression:
 	  primary_expression
 	| postfix_expression '[' expression ']'
-	| postfix_expression '(' argument_expression_list ')'
+	| postfix_expression '(' arguments ')'
 	| postfix_expression '(' ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression ARROW IDENTIFIER
@@ -426,9 +426,9 @@ primary_expression:
 	| '(' expression ')'
 	;
 
-argument_expression_list:
-	  assignment_expression
-	| argument_expression_list ',' assignment_expression
+arguments:
+	  assignments
+	| arguments ',' assignments
 	;
 
 %%
