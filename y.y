@@ -113,6 +113,7 @@ void put(char *key, char *value) {
 %type <s> declarator
 %type <s> declaratee
 %type <s> function_definition
+%type <s> type
 
 %left ','
 %left '=' ASSIGNMENT_OPERATOR
@@ -257,7 +258,7 @@ parameters:
 
 parameter:
 	  declarator declaratee
-	| declarator abstract_declaratee
+	| declarator function_pointer
 	| declarator
 	;
 
@@ -278,27 +279,27 @@ initializers:
 	;
 
 type_name:
-	  qualifiers abstract_declaratee
+	  qualifiers function_pointer
 	| qualifiers
 	;
 
-abstract_declaratee:
+function_pointer:
 	  pointer
-	| pointer direct_abstract_declaratee
-	|	direct_abstract_declaratee
+	| pointer direct_function_pointer
+	|	direct_function_pointer
 	;
 
-direct_abstract_declaratee:
-	  '(' abstract_declaratee ')'
-	| direct_abstract_declaratee '[' const_expression ']'
+direct_function_pointer:
+	  '(' function_pointer ')'
+	| direct_function_pointer '[' const_expression ']'
 	| '[' const_expression ']'
-	| direct_abstract_declaratee '[' ']'
+	| direct_function_pointer '[' ']'
 	| '[' ']'
-	| direct_abstract_declaratee '(' parameters ')'
-	| direct_abstract_declaratee '(' parameters ',' REST ')'
+	| direct_function_pointer '(' parameters ')'
+	| direct_function_pointer '(' parameters ',' REST ')'
 	| '(' parameters ')'
 	| '(' parameters ',' REST ')'
-	| direct_abstract_declaratee '(' ')'
+	| direct_function_pointer '(' ')'
 	| '(' ')'
 	;
 
