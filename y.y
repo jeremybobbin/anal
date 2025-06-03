@@ -25,6 +25,8 @@ typedef struct node {
 	struct node *next;
 } Node;
 
+char identifier[32];
+char function[32];
 int depth = 0;
 Node *levels[10] = {};
 char buf[BUFSIZ];
@@ -53,7 +55,7 @@ int unfmt(char *dst, char *src, int n) {
 
 int printt(char *type, char *token) {
 	int i, j, k, n; // token[i], buf[j]
-	j = sprintf(buf, "%d\t%s\t", yylineno, type);
+	j = sprintf(buf, "%6d%20s%20s\t", yylineno, function, type);
 	for (i = 0; i < yyleng+1; ) {
 		if (i < yyleng) {
 			n = MIN(BUFSIZ/2, yyleng-i);
@@ -124,6 +126,11 @@ void put(char *key, char *value) {
 %token <s> TYPEDEF IF FOR DO WHILE BREAK SWITCH CONTINUE RETURN CASE DEFAULT GOTO SIZEOF ENUM STRUCT UNION OR AND COMPARE CONTRAST RIGHT LEFT INCREMENT DECREMENT
 %token <s> ARROW REST ELSE
 
+%type <s> direct_declaratee
+%type <s> primary_expression
+%type <s> declaratee
+%type <s> function_definition
+
 %left ','
 %left '=' ASSIGNMENT_OPERATOR
 %left OR
@@ -152,10 +159,10 @@ external_declaration:
 	;
 
 function_definition:
-	  declarator declaratee declarations block
-	| declaratee declarations block
-	| declarator declaratee	block
-	| declaratee block
+	  declarator declaratee declarations {down(); sprintf(function, "%s", identifier);}  block
+	| declaratee declarations            {down(); sprintf(function, "%s", identifier);}  block
+	| declarator declaratee	             {down(); sprintf(function, "%s", identifier);}  block
+	| declaratee                         {down(); sprintf(function, "%s", identifier);}  block
 	;
 
 declaration:
@@ -233,19 +240,19 @@ enumerator:
 	;
 
 declaratee:
-	  pointer direct_declaratee
-	| direct_declaratee
+	  pointer direct_declaratee { sprintf($$, "*%s", $2); }
+	| direct_declaratee         { sprintf($$, "%s",  $1); }
 	;
 
 direct_declaratee:
-	  IDENTIFIER
-	| '(' declaratee ')'
-	| direct_declaratee '[' const_expression ']'
-	| direct_declaratee '['	']'
-	| direct_declaratee '(' parameters ')'
-	| direct_declaratee '(' parameters ',' REST ')'
-	| direct_declaratee '(' identifiers ')'
-	| direct_declaratee '('	')'
+	  IDENTIFIER                                    { sprintf(identifier, "%s", $1); }
+	| '(' declaratee ')'                            { }
+	| direct_declaratee '[' const_expression ']'    { }
+	| direct_declaratee '['	']'                     { }
+	| direct_declaratee '(' parameters ')'          { }
+	| direct_declaratee '(' parameters ',' REST ')' { }
+	| direct_declaratee '(' identifiers ')'         { }
+	| direct_declaratee '('	')'                     { }
 	;
 
 pointer:
@@ -417,12 +424,12 @@ postfix_expression:
 	;
 
 primary_expression:
-	  IDENTIFIER        {  printt("variable",  $1); }
-	| INTEGER           {  printt("integer",   $1); }
-	| CHARACTER         {  printt("character", $1); }
-	| FLOATING_POINT    {  printt("float",     $1); }
-	| STRING            {  printt("string",    $1); }
-	| '(' expression ')'
+	  IDENTIFIER        {  printt("variable",  $1); sprintf($$, "%s", $1); }
+	| INTEGER           {  printt("integer",   $1); sprintf($$, "%s", $1); }
+	| CHARACTER         {  printt("character", $1); sprintf($$, "%s", $1); }
+	| FLOATING_POINT    {  printt("float",     $1); sprintf($$, "%s", $1); }
+	| STRING            {  printt("string",    $1); sprintf($$, "%s", $1); }
+	| '(' expression ')'{  printt("string",    "TODO"); sprintf($$, "%s", "TODO"); }
 	;
 
 arguments:
