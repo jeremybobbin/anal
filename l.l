@@ -43,8 +43,8 @@
 "'"."'"                                                                  {yylval.s = yytext; return CHARACTER;}
 [a-zA-z_][a-zA-z_0-9]*                                                   {yylval.s = yytext; return IDENTIFIER;}
 ["](\\.|[^\"])*["]                                                       {yylval.s = yytext; return STRING;}
-"//"(\\.|[^\n])*                                                         {printf("%6d%20s%20s\t", yylineno, function, "comment"); unfmt(yytext);}
-[/][*]([^*]|[*]*[^*/])*[*]+[/]                                           {printf("%6d%20s%20s\t", yylineno, function, "comment"); unfmt(yytext);}
+"//"(\\.|[^\n])*                                                         {printf("%6d%10s comment    ", yylineno, function); unfmt(yytext); printf("\n");}
+[/][*]([^*]|[*]*[^*/])*[*]+[/]                                           {printf("%6d%10s comment    ", yylineno, function); unfmt(yytext); printf("\n");}
 [ \t\n]                                                                  ;
 %%
 

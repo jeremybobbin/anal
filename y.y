@@ -6,6 +6,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -49,7 +50,6 @@ void unfmt(char *src) {
 		default:   putchar(*src);
 		}
 	}
-	putchar('\n');
 }
 
 void *xmalloc(int n) {
@@ -74,9 +74,9 @@ void up() {
 	depth--;
 }
 
-char *get(char *key, char *value) {
+char *get(char *key) {
 	Node *n;
-	for (levels[depth] = n; n; n = n->next) {
+	for (n = levels[depth]; n; n = n->next) {
 		if (strcmp(key, n->key) == 0) {
 			return n->value;
 		}
@@ -85,11 +85,16 @@ char *get(char *key, char *value) {
 }
 
 void put(char *key, char *value) {
+	char *s;
 	Node *n = xmalloc(sizeof(Node));
-	levels[depth] = n;
 	n->next = levels[depth];
-	n->key = strdup(key);
-	n->value = strdup(value);
+	levels[depth] = n;
+
+	for (s = key; *s && isalnum(*s); s++);
+	n->key = strndup(key, s-key);
+
+	for (s = value; *s && !isspace(*s); s++);
+	n->value = strndup(value, s-value);
 }
 
 %}
@@ -105,6 +110,7 @@ void put(char *key, char *value) {
 
 %type <s> direct_declaratee
 %type <s> primary_expression
+%type <s> declarator
 %type <s> declaratee
 %type <s> function_definition
 
@@ -143,10 +149,10 @@ function_definition:
 	;
 
 declaration:
-	  declarator declaratee
-	| declarator declaratee '=' initializer
-	| declarator declaratee ',' declaratee
-	| declarator declaratee '=' initializer ',' declaratee '=' initializer
+	  declarator declaratee { put($2, $1);}
+	| declarator declaratee '=' initializer { put($2, $1);}
+	| declarator declaratee ',' declaratee { put($2, $1);put($4, $1);}
+	| declarator declaratee '=' initializer ',' declaratee '=' initializer { put($2, $1); put($6, $1); }
 	| declarator
 	;
 
@@ -217,8 +223,8 @@ enumerator:
 	;
 
 declaratee:
-	  pointer direct_declaratee { sprintf($$, "*%s", $2); }
-	| direct_declaratee         { sprintf($$, "%s",  $1); }
+	  pointer direct_declaratee {  }
+	| direct_declaratee         {  }
 	;
 
 direct_declaratee:
@@ -401,12 +407,12 @@ postfix_expression:
 	;
 
 primary_expression:
-	  IDENTIFIER        {  printf("%6d%20s%20s\t", yylineno, function, "variable");  unfmt($1);     sprintf($$, "%s", $1); }
-	| INTEGER           {  printf("%6d%20s%20s\t", yylineno, function, "integer");   unfmt($1);     sprintf($$, "%s", $1); }
-	| CHARACTER         {  printf("%6d%20s%20s\t", yylineno, function, "character"); unfmt($1);     sprintf($$, "%s", $1); }
-	| FLOATING_POINT    {  printf("%6d%20s%20s\t", yylineno, function, "float");     unfmt($1);     sprintf($$, "%s", $1); }
-	| STRING            {  printf("%6d%20s%20s\t", yylineno, function, "string");    unfmt($1);     sprintf($$, "%s", $1); }
-	| '(' expression ')'{  printf("%6d%20s%20s\t", yylineno, function, "string");    unfmt("TODO"); sprintf($$, "%s", "TODO"); }
+	  IDENTIFIER        {  printf("%6d%10s identifier ",     yylineno, function); unfmt($1); printf(" %s\n", get($1)); }
+	| INTEGER           {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
+	| CHARACTER         {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
+	| FLOATING_POINT    {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
+	| STRING            {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
+	| '(' expression ')'{  printf("%6d%10s literal    ",     yylineno, function); unfmt(""); printf("\n");             }
 	;
 
 arguments:
