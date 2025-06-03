@@ -387,13 +387,14 @@ unary_expression:
 	  postfix_expression
 	| INCREMENT unary_expression
 	| DECREMENT unary_expression
-	| unary_operator cast_expression
+	| '&' unary_expression
+	| '*' unary_expression
+	| '+' unary_expression
+	| '-' unary_expression
+	| '~' unary_expression
+	| '!' unary_expression
 	| SIZEOF unary_expression
 	| SIZEOF '(' type_name ')'
-	;
-
-unary_operator:
-	'&' | '*' | '+' | '-' | '~' | '!'
 	;
 
 postfix_expression:
