@@ -36,43 +36,20 @@ int yyerror(const char *msg) {
 	exit(1);
 }
 
-int unfmt(char *dst, char *src, int n) {
-	char *d, *e = src+n;
-	for (d = dst; src < e; src++) {
+void unfmt(char *src) {
+	for (; *src; src++) {
 		switch (*src) {
-		case '\a': *d++ = '\\'; *d++ = 'a'; break;
-		case '\b': *d++ = '\\'; *d++ = 'b'; break;
-		case '\t': *d++ = '\\'; *d++ = 't'; break;
-		case '\n': *d++ = '\\'; *d++ = 'n'; break;
-		case '\v': *d++ = '\\'; *d++ = 'v'; break;
-		case '\f': *d++ = '\\'; *d++ = 'f'; break;
-		case '\r': *d++ = '\\'; *d++ = 'r'; break;
-		default: *d++ = *src;
+		case '\a': putchar('\\'); putchar('a'); break;
+		case '\b': putchar('\\'); putchar('b'); break;
+		case '\t': putchar('\\'); putchar('t'); break;
+		case '\n': putchar('\\'); putchar('n'); break;
+		case '\v': putchar('\\'); putchar('v'); break;
+		case '\f': putchar('\\'); putchar('f'); break;
+		case '\r': putchar('\\'); putchar('r'); break;
+		default:   putchar(*src);
 		}
 	}
-	return d-dst;
-}
-
-int printt(char *type, char *token) {
-	int i, j, k, n; // token[i], buf[j]
-	j = sprintf(buf, "%6d%20s%20s\t", yylineno, function, type);
-	for (i = 0; i < yyleng+1; ) {
-		if (i < yyleng) {
-			n = MIN(BUFSIZ/2, yyleng-i);
-			j += unfmt(&buf[j], &token[i], n);
-			i += n;
-		} else if (j < BUFSIZ) {
-			buf[j++] = '\n';
-			i++;
-		}
-		for (k = 0; k < j; k += n) {
-			if ((n = write(1, &buf[k], j-k)) == -1) {
-				fprintf(stderr, "error: %s\n", strerror(errno));
-				exit(1);
-			}
-		}
-		j = 0;
-	}
+	putchar('\n');
 }
 
 void *xmalloc(int n) {
@@ -424,12 +401,12 @@ postfix_expression:
 	;
 
 primary_expression:
-	  IDENTIFIER        {  printt("variable",  $1); sprintf($$, "%s", $1); }
-	| INTEGER           {  printt("integer",   $1); sprintf($$, "%s", $1); }
-	| CHARACTER         {  printt("character", $1); sprintf($$, "%s", $1); }
-	| FLOATING_POINT    {  printt("float",     $1); sprintf($$, "%s", $1); }
-	| STRING            {  printt("string",    $1); sprintf($$, "%s", $1); }
-	| '(' expression ')'{  printt("string",    "TODO"); sprintf($$, "%s", "TODO"); }
+	  IDENTIFIER        {  printf("%6d%20s%20s\t", yylineno, function, "variable");  unfmt($1);     sprintf($$, "%s", $1); }
+	| INTEGER           {  printf("%6d%20s%20s\t", yylineno, function, "integer");   unfmt($1);     sprintf($$, "%s", $1); }
+	| CHARACTER         {  printf("%6d%20s%20s\t", yylineno, function, "character"); unfmt($1);     sprintf($$, "%s", $1); }
+	| FLOATING_POINT    {  printf("%6d%20s%20s\t", yylineno, function, "float");     unfmt($1);     sprintf($$, "%s", $1); }
+	| STRING            {  printf("%6d%20s%20s\t", yylineno, function, "string");    unfmt($1);     sprintf($$, "%s", $1); }
+	| '(' expression ')'{  printf("%6d%20s%20s\t", yylineno, function, "string");    unfmt("TODO"); sprintf($$, "%s", "TODO"); }
 	;
 
 arguments:
