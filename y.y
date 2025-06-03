@@ -17,6 +17,15 @@ int yydebug = 1;
 extern int yylineno;
 extern int yyleng;
 
+
+typedef struct node {
+	char *key;
+	char *value;
+	struct node *next;
+} Node;
+
+int depth = 0;
+Node *levels[10] = {};
 char buf[BUFSIZ];
 
 int yyerror(const char *msg) {
@@ -43,7 +52,7 @@ int unfmt(char *dst, char *src, int n) {
 
 int printt(char *type, char *token) {
 	int i, j, k, n; // token[i], buf[j]
-	j = sprintf(buf, "%6d %10s ", yylineno, type);
+	j = sprintf(buf, "%d\t%s\t", yylineno, type);
 	for (i = 0; i < yyleng+1; ) {
 		if (i < yyleng) {
 			n = MIN(BUFSIZ/2, yyleng-i);
@@ -61,6 +70,46 @@ int printt(char *type, char *token) {
 		}
 		j = 0;
 	}
+}
+
+void *xmalloc(int n) {
+	void *p;
+	if ((p = malloc(n)) == NULL) {
+		fprintf(stderr, "malloc\n");
+		exit(1);
+	}
+	return p;
+}
+
+void down() {
+	depth++;
+}
+
+void up() {
+	Node *n, *nn;
+	for (n = levels[depth]; n; n = nn) {
+		nn = n->next;
+		free(n);
+	}
+	depth--;
+}
+
+char *get(char *key, char *value) {
+	Node *n;
+	for (levels[depth] = n; n; n = n->next) {
+		if (strcmp(key, n->key) == 0) {
+			return n->value;
+		}
+	}
+	return NULL;
+}
+
+void put(char *key, char *value) {
+	Node *n = xmalloc(sizeof(Node));
+	levels[depth] = n;
+	n->next = levels[depth];
+	n->key = strdup(key);
+	n->value = strdup(value);
 }
 
 %}
@@ -133,7 +182,7 @@ declarator:
 	;
 
 type:
-	  PRIMATIVE {  printt("primative", $1); }
+	  PRIMATIVE
 	| STRUCT IDENTIFIER '{' struct_declarations '}'
 	| STRUCT '{' struct_declarations '}'
 	| STRUCT IDENTIFIER
@@ -283,9 +332,9 @@ expression_statement:
 	;
 
 block:
-	'{' declarations statements '}'
+	  '{' declarations statements  '}'
 	| '{' statements '}'
-	| '{' declarations	'}'
+	| '{'  declarations	'}'
 	| '{' '}'
 	;
 
