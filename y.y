@@ -312,23 +312,29 @@ direct_abstract_declaratee:
 	;
 
 statement:
-	  labeled_statement
-	| expression_statement
+	  IDENTIFIER ':'
+	| expression ';'
 	| block
-	| selection_statement
-	| iteration_statement
-	| jump_statement
-	;
-
-labeled_statement:
-	  IDENTIFIER ':' statement
-	| CASE const_expression ':' statement
-	| DEFAULT ':' statement
-	;
-
-expression_statement:
-	  expression ';'
-	| ';'
+	| GOTO IDENTIFIER ';'
+	| CASE const_expression ':'
+	| DEFAULT ':'
+	| CONTINUE ';'
+	| BREAK ';'
+	| RETURN ';'
+	| RETURN expression ';'
+	| IF '(' expression ')' statement ELSE statement
+	| IF '(' expression ')' statement
+	| SWITCH '(' expression ')' statement
+	| WHILE '(' expression ')' statement
+	| DO statement WHILE '(' expression ')' ';'
+	| FOR '(' expression ';' expression ';' expression ')' statement
+	| FOR '(' expression ';' expression ';'	')' statement
+	| FOR '(' expression ';' ';' expression ')' statement
+	| FOR '(' expression ';' ';' ')' statement
+	| FOR '(' ';' expression ';' expression ')' statement
+	| FOR '(' ';' expression ';' ')' statement
+	| FOR '(' ';' ';' expression ')' statement
+	| FOR '(' ';' ';' ')' statement
 	;
 
 block:
@@ -343,51 +349,24 @@ statements:
 	| statements statement
 	;
 
-selection_statement:
-	  IF '(' expression ')' statement ELSE statement
-	| IF '(' expression ')' statement
-	| SWITCH '(' expression ')' statement
-	;
-
-iteration_statement:
-	  WHILE '(' expression ')' statement
-	| DO statement WHILE '(' expression ')' ';'
-	| FOR '(' expression ';' expression ';' expression ')' statement
-	| FOR '(' expression ';' expression ';'	')' statement
-	| FOR '(' expression ';' ';' expression ')' statement
-	| FOR '(' expression ';' ';' ')' statement
-	| FOR '(' ';' expression ';' expression ')' statement
-	| FOR '(' ';' expression ';' ')' statement
-	| FOR '(' ';' ';' expression ')' statement
-	| FOR '(' ';' ';' ')' statement
-	;
-
-jump_statement:
-	  GOTO IDENTIFIER ';'
-	| CONTINUE ';'
-	| BREAK ';'
-	| RETURN expression ';'
-	| RETURN ';'
-	;
-
 expression:
 	  assignments
 	| expression ',' assignments
 	;
 
 assignments:
-	  conditional_expression
+	  ternary_expression
 	| unary_expression ASSIGNMENT_OPERATOR assignments
 	| unary_expression '=' assignments
 	;
 
-conditional_expression:
+ternary_expression:
 	  addition_expression
-	| addition_expression '?' expression ':' conditional_expression
+	| addition_expression '?' expression ':' ternary_expression
 	;
 
 const_expression:
-	  conditional_expression
+	  ternary_expression
 	;
 
 addition_expression:
