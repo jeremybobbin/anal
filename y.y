@@ -16,6 +16,7 @@ int yydebug = 1;
 #endif
 extern int yylineno;
 extern int yyleng;
+extern char *yytext;
 
 
 typedef struct node {
@@ -29,7 +30,7 @@ Node *levels[10] = {};
 char buf[BUFSIZ];
 
 int yyerror(const char *msg) {
-	fprintf(stderr, "%d: error: %s\n", yylineno, msg);
+	fprintf(stderr, "%d: error: %s - '%s'\n", yylineno, msg, yytext);
 	exit(1);
 }
 
@@ -314,6 +315,7 @@ direct_abstract_declaratee:
 statement:
 	  IDENTIFIER ':'
 	| expression ';'
+	| declaration ';'
 	| block
 	| GOTO IDENTIFIER ';'
 	| CASE const_expression ':'
@@ -338,9 +340,7 @@ statement:
 	;
 
 block:
-	  '{' declarations statements  '}'
-	| '{' statements '}'
-	| '{'  declarations	'}'
+	  '{' statements  '}'
 	| '{' '}'
 	;
 
