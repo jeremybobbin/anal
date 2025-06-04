@@ -90,11 +90,20 @@ void put(char *key, char *value) {
 	n->next = levels[depth];
 	levels[depth] = n;
 
-	for (s = key; *s && isalnum(*s); s++);
-	n->key = strndup(key, s-key);
+	n->key = key;
+	n->value = value;
+}
 
-	for (s = value; *s && !isspace(*s); s++);
-	n->value = strndup(value, s-value);
+char *dupt(char *start, char *finish) {
+	char *s;
+	for (s = finish; s > start && !isalnum(*s); s--);
+	return strndup(start, s-start);
+}
+
+char *duplit(char *str) {
+	char *s;
+	for (s = str; isalnum(*s); s++);
+	return strndup(str, s-str);
 }
 
 %}
@@ -155,10 +164,10 @@ function_definition:
 	declaratee                         {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' ;
 
 declaration:
-	declarator declaratee { put($2, $1);} |
-	declarator declaratee '=' initializer { put($2, $1);} |
-	declarator declaratee ',' declaratee { put($2, $1);put($4, $1);} |
-	declarator declaratee '=' initializer ',' declaratee '=' initializer { put($2, $1); put($6, $1); } |
+	declarator declaratee                                                { put(duplit($2), dupt($1, $2));             } |
+	declarator declaratee '=' initializer                                { put(duplit($2), dupt($1, $2));              } |
+	declarator declaratee ',' declaratee                                 { put(duplit($2), dupt($1, $2)); put(duplit($4), dupt($1, $4)); } |
+	declarator declaratee '=' initializer ',' declaratee '=' initializer { put(duplit($2), dupt($1, $2)); put(duplit($6), dupt($1, $6)); } |
 	declarator ;
 
 declarations:
@@ -166,26 +175,26 @@ declarations:
 	declarations declaration ';' ;
 
 declarator:
-	TYPEDEF declarator |
-	type declarator |
+	TYPEDEF declarator       |
+	type declarator          |
 	STORAGE_CLASS declarator |
-	QUALITY declarator |
-	STORAGE_CLASS |
-	TYPEDEF |
-	type |
-	QUALITY ;
+	QUALITY declarator       |
+	STORAGE_CLASS            |
+	TYPEDEF                  |
+	type                     |
+	QUALITY                  ;
 
 type:
-	ENUM   IDENTIFIER                               |
-	UNION  IDENTIFIER                               |
-	STRUCT IDENTIFIER                               |
-	ENUM              '{' enumerators           '}' |
-	UNION             '{' struct_declarations   '}' |
-	STRUCT            '{' struct_declarations   '}' |
-	ENUM   IDENTIFIER '{' enumerators           '}' |
-	UNION  IDENTIFIER '{' struct_declarations   '}' |
-	STRUCT IDENTIFIER '{' struct_declarations   '}' |
-	PRIMATIVE                                       ;
+	ENUM      IDENTIFIER                               |
+	UNION     IDENTIFIER                               |
+	STRUCT    IDENTIFIER                               |
+	ENUM                 '{' enumerators           '}' |
+	UNION                '{' struct_declarations   '}' |
+	STRUCT               '{' struct_declarations   '}' |
+	ENUM      IDENTIFIER '{' enumerators           '}' |
+	UNION     IDENTIFIER '{' struct_declarations   '}' |
+	STRUCT    IDENTIFIER '{' struct_declarations   '}' |
+	PRIMATIVE                                          ;
 
 struct_declarations:
 	struct_declaration |
@@ -315,8 +324,9 @@ expression:
 	expression ',' assignment ;
 
 assignment:
-	ternary_expression |
-	prefixed '=' assignment ;
+	prefixed ASSIGNMENT_OPERATOR assignment |
+	prefixed '=' assignment |
+	ternary_expression ;
 
 ternary_expression:
 	addition |
