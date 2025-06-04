@@ -109,11 +109,13 @@ void put(char *key, char *value) {
 %token <s> ARROW REST ELSE
 
 %type <s> direct_declaratee
-%type <s> primary_expression
+%type <s> primary
 %type <s> declarator
 %type <s> declaratee
 %type <s> function_definition
 %type <s> type
+
+%left THEN ELSE
 
 %left ','
 %left '=' ASSIGNMENT_OPERATOR
@@ -128,7 +130,12 @@ void put(char *key, char *value) {
 %left '+' '-'
 %left '*' '/'
 
-%left THEN ELSE
+%right SIZEOF
+%right ARROW
+
+%left INCREMENT
+%left DECREMENT
+
 
 %%
 
@@ -347,8 +354,8 @@ expression:
 
 assignments:
 	  ternary_expression
-	| unary_expression ASSIGNMENT_OPERATOR assignments
-	| unary_expression '=' assignments
+	| prefixed ASSIGNMENT_OPERATOR assignments
+	| prefixed '=' assignments
 	;
 
 ternary_expression:
@@ -379,36 +386,36 @@ addition_expression:
 	;
 
 cast_expression:
-	  unary_expression
+	  prefixed
 	| '(' type_name ')' cast_expression
 	;
 
-unary_expression:
-	  postfix_expression
-	| INCREMENT unary_expression
-	| DECREMENT unary_expression
-	| '&' unary_expression
-	| '*' unary_expression
-	| '+' unary_expression
-	| '-' unary_expression
-	| '~' unary_expression
-	| '!' unary_expression
-	| SIZEOF unary_expression
+prefixed:
+	  suffixed
+	| INCREMENT prefixed
+	| DECREMENT prefixed
+	| '&' prefixed
+	| '*' prefixed
+	| '+' prefixed
+	| '-' prefixed
+	| '~' prefixed
+	| '!' prefixed
+	| SIZEOF prefixed
 	| SIZEOF '(' type_name ')'
 	;
 
-postfix_expression:
-	  primary_expression
-	| postfix_expression '[' expression ']'
-	| postfix_expression '(' arguments ')'
-	| postfix_expression '(' ')'
-	| postfix_expression '.' IDENTIFIER
-	| postfix_expression ARROW IDENTIFIER
-	| postfix_expression INCREMENT
-	| postfix_expression DECREMENT
+suffixed:
+	  primary
+	| suffixed ARROW IDENTIFIER
+	| suffixed INCREMENT
+	| suffixed DECREMENT
+	| suffixed '[' expression ']'
+	| suffixed '(' arguments ')'
+	| suffixed '(' ')'
+	| suffixed '.' IDENTIFIER
 	;
 
-primary_expression:
+primary:
 	  IDENTIFIER        {  printf("%6d%10s identifier ",     yylineno, function); unfmt($1); printf(" %s\n", get($1)); }
 	| INTEGER           {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
 	| CHARACTER         {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
