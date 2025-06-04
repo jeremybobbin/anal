@@ -151,10 +151,10 @@ external_declaration:
 	;
 
 function_definition:
-	  declarator declaratee declarations {down(); sprintf(function, "%s", identifier);}  block
-	| declaratee declarations            {down(); sprintf(function, "%s", identifier);}  block
-	| declarator declaratee	             {down(); sprintf(function, "%s", identifier);}  block
-	| declaratee                         {down(); sprintf(function, "%s", identifier);}  block
+	  declarator declaratee declarations {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
+	| declaratee declarations            {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
+	| declarator declaratee	             {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
+	| declaratee                         {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
 	;
 
 declaration:
@@ -311,40 +311,31 @@ direct_function_pointer:
 	| '(' ')'
 	;
 
+clause:
+	| expression
+	| declaration
+	| GOTO IDENTIFIER
+	| CONTINUE
+	| BREAK
+	| RETURN
+	| RETURN expression
+	;
+
 statement:
-	  IDENTIFIER ':'
-	| expression ';'
-	| declaration ';'
-	| block
-	| GOTO IDENTIFIER ';'
+	  clause ';'
+	| '{' statements '}'
+	| IDENTIFIER ':'
 	| CASE const_expression ':'
 	| DEFAULT ':'
-	| CONTINUE ';'
-	| BREAK ';'
-	| RETURN ';'
-	| RETURN expression ';'
-	| IF '(' expression ')' statement ELSE statement
+	| IF '(' expression ')' clause ';' ELSE statement
 	| IF '(' expression ')' statement
 	| SWITCH '(' expression ')' statement
 	| WHILE '(' expression ')' statement
-	| DO statement WHILE '(' expression ')' ';'
-	| FOR '(' expression ';' expression ';' expression ')' statement
-	| FOR '(' expression ';' expression ';'	')' statement
-	| FOR '(' expression ';' ';' expression ')' statement
-	| FOR '(' expression ';' ';' ')' statement
-	| FOR '(' ';' expression ';' expression ')' statement
-	| FOR '(' ';' expression ';' ')' statement
-	| FOR '(' ';' ';' expression ')' statement
-	| FOR '(' ';' ';' ')' statement
-	;
-
-block:
-	  '{' statements  '}'
-	| '{' '}'
+	| DO statement WHILE '(' expression ')'
+	| FOR '(' clause ';' clause ';' clause ')' statement
 	;
 
 statements:
-	  statement
 	| statements statement
 	;
 
