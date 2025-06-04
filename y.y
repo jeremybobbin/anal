@@ -141,280 +141,242 @@ void put(char *key, char *value) {
 %%
 
 translation_unit:
-	  external_declaration
-	| translation_unit external_declaration
-	;
+	external_declaration |
+	translation_unit external_declaration ;
 
 external_declaration:
-	  function_definition
-	| declaration ';'
-	;
+	function_definition |
+	declaration ';' ;
 
 function_definition:
-	  declarator declaratee declarations {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
-	| declaratee declarations            {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
-	| declarator declaratee	             {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
-	| declaratee                         {down(); sprintf(function, "%s", identifier);}  '{' statements  '}'
-	;
+	declarator declaratee declarations {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' |
+	declaratee declarations            {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' |
+	declarator declaratee              {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' |
+	declaratee                         {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' ;
 
 declaration:
-	  declarator declaratee { put($2, $1);}
-	| declarator declaratee '=' initializer { put($2, $1);}
-	| declarator declaratee ',' declaratee { put($2, $1);put($4, $1);}
-	| declarator declaratee '=' initializer ',' declaratee '=' initializer { put($2, $1); put($6, $1); }
-	| declarator
-	;
+	declarator declaratee { put($2, $1);} |
+	declarator declaratee '=' initializer { put($2, $1);} |
+	declarator declaratee ',' declaratee { put($2, $1);put($4, $1);} |
+	declarator declaratee '=' initializer ',' declaratee '=' initializer { put($2, $1); put($6, $1); } |
+	declarator ;
 
 declarations:
-	  declaration ';'
-	| declarations declaration ';'
-	;
+	declaration ';' |
+	declarations declaration ';' ;
 
 declarator:
-	  TYPEDEF declarator
-	| type declarator
-	| STORAGE_CLASS declarator
-	| QUALITY declarator
-	| STORAGE_CLASS
-	| TYPEDEF
-	| type
-	| QUALITY
-	;
+	TYPEDEF declarator |
+	type declarator |
+	STORAGE_CLASS declarator |
+	QUALITY declarator |
+	STORAGE_CLASS |
+	TYPEDEF |
+	type |
+	QUALITY ;
 
 type:
-	  PRIMATIVE
-	| STRUCT IDENTIFIER '{' struct_declarations '}'
-	| STRUCT '{' struct_declarations '}'
-	| STRUCT IDENTIFIER
-	| UNION IDENTIFIER '{' struct_declarations '}'
-	| UNION '{' struct_declarations '}'
-	| UNION IDENTIFIER
-	| ENUM IDENTIFIER '{' enumerators '}'
-	| ENUM '{' enumerators '}'
-	| ENUM IDENTIFIER
-	;
+	ENUM   IDENTIFIER                               |
+	UNION  IDENTIFIER                               |
+	STRUCT IDENTIFIER                               |
+	ENUM              '{' enumerators           '}' |
+	UNION             '{' struct_declarations   '}' |
+	STRUCT            '{' struct_declarations   '}' |
+	ENUM   IDENTIFIER '{' enumerators           '}' |
+	UNION  IDENTIFIER '{' struct_declarations   '}' |
+	STRUCT IDENTIFIER '{' struct_declarations   '}' |
+	PRIMATIVE                                       ;
 
 struct_declarations:
-	  struct_declaration
-	| struct_declarations struct_declaration
-	;
+	struct_declaration |
+	struct_declarations struct_declaration ;
 
 struct_declaration:
-	  qualifiers struct_declaratees ';'
-	;
+	  qualifiers struct_declaratees ';' ;
 
 qualifiers:
-	  type qualifiers
-	| type
-	| QUALITY qualifiers
-	| QUALITY
-	;
+	type qualifiers |
+	type |
+	QUALITY qualifiers |
+	QUALITY ;
 
 struct_declaratees:
-	  struct_declaratee
-	| struct_declaratees ',' struct_declaratee
-	;
+	struct_declaratee |
+	struct_declaratees ',' struct_declaratee ;
 
 struct_declaratee:
-	  declaratee
-	| declaratee ':' const_expression
-	| ':' const_expression
-	;
+	declaratee |
+	declaratee ':' const_expression |
+	':' const_expression ;
 
 enumerators:
-	  enumerator
-	| enumerators ',' enumerator
-	;
+	enumerator |
+	enumerators ',' enumerator ;
 
 enumerator:
-	  IDENTIFIER
-	| IDENTIFIER '=' const_expression
-	;
+	IDENTIFIER |
+	IDENTIFIER '=' const_expression ;
 
 declaratee:
-	  pointer direct_declaratee {  }
-	| direct_declaratee         {  }
-	;
+	pointer direct_declaratee {  } |
+	direct_declaratee         {  } ;
 
 direct_declaratee:
-	  IDENTIFIER                                    { sprintf(identifier, "%s", $1); }
-	| '(' declaratee ')'                            { }
-	| direct_declaratee '[' const_expression ']'    { }
-	| direct_declaratee '['	']'                     { }
-	| direct_declaratee '(' parameters ')'          { }
-	| direct_declaratee '(' parameters ',' REST ')' { }
-	| direct_declaratee '(' identifiers ')'         { }
-	| direct_declaratee '('	')'                     { }
-	;
+	IDENTIFIER                                    { sprintf(identifier, "%s", $1); } |
+	'(' declaratee ')'                            {                                } |
+	direct_declaratee '[' const_expression ']'    {                                } |
+	direct_declaratee '['	']'                   {                                } |
+	direct_declaratee '(' parameters ')'          {                                } |
+	direct_declaratee '(' parameters ',' REST ')' {                                } |
+	direct_declaratee '(' identifiers ')'         {                                } |
+	direct_declaratee '('	')'                   {                                } ;
 
 pointer:
-	  '*'
-	| '*' type_qualifiers
-	| '*' type_qualifiers pointer
-	| '*' pointer
-	;
+	'*' |
+	'*' type_qualifiers |
+	'*' type_qualifiers pointer |
+	'*' pointer ;
 
 type_qualifiers:
-	  QUALITY
-	| type_qualifiers QUALITY
-	;
+	QUALITY |
+	type_qualifiers QUALITY ;
 
 parameters:
-	  parameter
-	| parameters ',' parameter
-	;
+	parameter |
+	parameters ',' parameter ;
 
 parameter:
-	  declarator declaratee
-	| declarator function_pointer
-	| declarator
-	;
+	declarator declaratee |
+	declarator function_pointer |
+	declarator ;
 
 identifiers:
-	  IDENTIFIER
-	| identifiers ',' IDENTIFIER
-	;
+	IDENTIFIER |
+	identifiers ',' IDENTIFIER ;
 
 initializer:
-	  assignment
-	| '{' initializers '}'
-	| '{' initializers ',' '}'
-	;
+	assignment |
+	'{' initializers '}' |
+	'{' initializers ',' '}' ;
 
 initializers:
-	  initializer
-	| initializers ',' initializer
-	;
+	initializer |
+	initializers ',' initializer ;
 
 type_name:
-	  qualifiers function_pointer
-	| qualifiers
-	;
+	qualifiers function_pointer |
+	qualifiers ;
 
 function_pointer:
-	  pointer
-	| pointer direct_function_pointer
-	|	direct_function_pointer
-	;
+	pointer |
+	pointer direct_function_pointer |
+	direct_function_pointer ;
 
 direct_function_pointer:
-	  '(' function_pointer ')'
-	| direct_function_pointer '[' const_expression ']'
-	| '[' const_expression ']'
-	| direct_function_pointer '[' ']'
-	| '[' ']'
-	| direct_function_pointer '(' parameters ')'
-	| direct_function_pointer '(' parameters ',' REST ')'
-	| '(' parameters ')'
-	| '(' parameters ',' REST ')'
-	| direct_function_pointer '(' ')'
-	| '(' ')'
-	;
+	'(' function_pointer ')' |
+	direct_function_pointer '[' const_expression ']' |
+	'[' const_expression ']' |
+	direct_function_pointer '[' ']' |
+	'[' ']' |
+	direct_function_pointer '(' parameters ')' |
+	direct_function_pointer '(' parameters ',' REST ')' |
+	'(' parameters ')' |
+	'(' parameters ',' REST ')' |
+	direct_function_pointer '(' ')' |
+	'(' ')' ;
 
-clause:
-	| expression
-	| declaration
-	| GOTO IDENTIFIER
-	| CONTINUE
-	| BREAK
-	| RETURN
-	| RETURN expression
-	;
+clause: |
+	expression |
+	declaration |
+	GOTO IDENTIFIER |
+	CONTINUE |
+	BREAK |
+	RETURN |
+	RETURN expression ;
 
 statement:
-	  clause ';'
-	| '{' statements '}'
-	| IDENTIFIER ':'
-	| CASE const_expression ':'
-	| DEFAULT ':'
-	| IF '(' expression ')' clause ';' ELSE statement
-	| IF '(' expression ')' statement
-	| SWITCH '(' expression ')' statement
-	| WHILE '(' expression ')' statement
-	| DO statement WHILE '(' expression ')'
-	| FOR '(' clause ';' clause ';' clause ')' statement
-	;
+	clause ';' |
+	'{' statements '}' |
+	IDENTIFIER ':' |
+	CASE const_expression ':' |
+	DEFAULT ':' |
+	IF '(' expression ')' clause ';' ELSE statement |
+	IF '(' expression ')' statement |
+	SWITCH '(' expression ')' statement |
+	WHILE '(' expression ')' statement |
+	DO statement WHILE '(' expression ')' |
+	FOR '(' clause ';' clause ';' clause ')' statement ;
 
-statements:
-	| statements statement
-	;
+statements: |
+	statements statement ;
 
 expression:
-	  assignment
-	| expression ',' assignment
-	;
+	assignment |
+	expression ',' assignment ;
 
 assignment:
-	  ternary_expression
-	| prefixed '=' assignment
-	;
+	ternary_expression |
+	prefixed '=' assignment ;
 
 ternary_expression:
-	  addition
-	| addition '?' expression ':' ternary_expression
-	;
+	addition |
+	addition '?' expression ':' ternary_expression ;
 
 const_expression:
-	ternary_expression
-	;
+	ternary_expression ;
 
 addition:
-	  prefixed
-	| '(' type_name ')' prefixed
-	| addition OR       prefixed
-	| addition AND      prefixed
-	| addition '|'      prefixed
-	| addition '^'      prefixed
-	| addition '&'      prefixed
-	| addition CONTRAST prefixed
-	| addition COMPARE  prefixed
-	| addition RIGHT    prefixed
-	| addition LEFT     prefixed
-	| addition '+'      prefixed
-	| addition '-'      prefixed
-	| addition '*'      prefixed
-	| addition '/'      prefixed
-	| addition '%'      prefixed
-	;
+	'(' type_name ')' prefixed |
+	addition OR       prefixed |
+	addition AND      prefixed |
+	addition '|'      prefixed |
+	addition '^'      prefixed |
+	addition '&'      prefixed |
+	addition CONTRAST prefixed |
+	addition COMPARE  prefixed |
+	addition RIGHT    prefixed |
+	addition LEFT     prefixed |
+	addition '+'      prefixed |
+	addition '-'      prefixed |
+	addition '*'      prefixed |
+	addition '/'      prefixed |
+	addition '%'      prefixed |
+	prefixed ;
 
 prefixed:
-	  suffixed
-	| INCREMENT prefixed
-	| DECREMENT prefixed
-	| '&' prefixed
-	| '*' prefixed
-	| '+' prefixed
-	| '-' prefixed
-	| '~' prefixed
-	| '!' prefixed
-	| SIZEOF prefixed
-	| SIZEOF '(' type_name ')'
-	;
+	INCREMENT prefixed |
+	DECREMENT prefixed |
+	'&' prefixed |
+	'*' prefixed |
+	'+' prefixed |
+	'-' prefixed |
+	'~' prefixed |
+	'!' prefixed |
+	SIZEOF prefixed |
+	SIZEOF '(' type_name ')' |
+	suffixed ;
 
 suffixed:
-	  IDENTIFIER { printf("%6d%10s identifier ", yylineno, function); unfmt($1); printf(" %s\n", get($1)); }
-	| literal    { printf("%6d%10s literal    ", yylineno, function); unfmt($1); printf("\n");             }
-	| '(' expression ')'
-	| suffixed ARROW IDENTIFIER
-	| suffixed INCREMENT
-	| suffixed DECREMENT
-	| suffixed '[' expression ']'
-	| suffixed '(' arguments ')'
-	| suffixed '(' ')'
-	| suffixed '.' IDENTIFIER
-	;
+	IDENTIFIER { printf("%6d%10s identifier ", yylineno, function); unfmt($1); printf(" %s\n", get($1)); } |
+	literal    { printf("%6d%10s literal    ", yylineno, function); unfmt($1); printf("\n");             } |
+	'(' expression ')' |
+	suffixed ARROW IDENTIFIER |
+	suffixed INCREMENT |
+	suffixed DECREMENT |
+	suffixed '[' expression ']' |
+	suffixed '(' arguments ')' |
+	suffixed '(' ')' |
+	suffixed '.' IDENTIFIER ;
 
 literal:
-	  INTEGER
-	| CHARACTER
-	| FLOATING_POINT
-	| STRING
-	;
+	INTEGER |
+	CHARACTER |
+	FLOATING_POINT |
+	STRING ;
 
 arguments:
-	  assignment
-	| arguments ',' assignment
-	;
+	assignment |
+	arguments ',' assignment ;
 
 %%
 
