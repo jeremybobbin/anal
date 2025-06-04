@@ -28,6 +28,7 @@ typedef struct node {
 
 char identifier[32];
 char function[32];
+char *declarator = NULL;
 int depth = 0;
 Node *levels[10] = {};
 char buf[BUFSIZ];
@@ -95,9 +96,20 @@ void put(char *key, char *value) {
 }
 
 char *dupt(char *start, char *finish) {
-	char *s;
-	for (s = finish; s > start && !isalnum(*s); s--);
-	return strndup(start, s-start);
+	char *s, *last;
+	if (finish) {
+		for (s = finish; s > start && !isalnum(*s); s--);
+		return strndup(start, s-start);
+	} else {
+		for (s = start; *s; s++) {
+			if (!isalnum(*s) && s > start) {
+				last = s;
+			}
+		}
+		for (s = last; s > start && !isalnum(*s); s--);
+		s = last;
+		return strndup(start, s-start);
+	}
 }
 
 char *duplit(char *str) {
@@ -121,6 +133,7 @@ char *duplit(char *str) {
 //%type <s> primary
 %type <s> declarator
 %type <s> declaratee
+%type <s> declaratees
 %type <s> function_definition
 %type <s> type
 %type <s> literal
@@ -164,25 +177,22 @@ function_definition:
 	declaratee                         {down(); sprintf(function, "%s", identifier);}  '{' statements  '}' ;
 
 declaration:
-	declarator declaratee                                                { put(duplit($2), dupt($1, $2));             } |
-	declarator declaratee '=' initializer                                { put(duplit($2), dupt($1, $2));              } |
-	declarator declaratee ',' declaratee                                 { put(duplit($2), dupt($1, $2)); put(duplit($4), dupt($1, $4)); } |
-	declarator declaratee '=' initializer ',' declaratee '=' initializer { put(duplit($2), dupt($1, $2)); put(duplit($6), dupt($1, $6)); } |
-	declarator ;
+	declarator {declarator=dupt($1,NULL);} declaratees |
+	declarator {declarator=dupt($1,NULL);};
 
 declarations:
 	declaration ';' |
 	declarations declaration ';' ;
 
 declarator:
-	TYPEDEF declarator       |
-	type declarator          |
-	STORAGE_CLASS declarator |
-	QUALITY declarator       |
-	STORAGE_CLASS            |
-	TYPEDEF                  |
-	type                     |
-	QUALITY                  ;
+	TYPEDEF declarator       {}|
+	type declarator          {}|
+	STORAGE_CLASS declarator {}|
+	QUALITY declarator       {}|
+	STORAGE_CLASS            {}|
+	TYPEDEF                  {}|
+	type                     {}|
+	QUALITY                  {};
 
 type:
 	ENUM      IDENTIFIER                               |
@@ -225,6 +235,12 @@ enumerators:
 enumerator:
 	IDENTIFIER |
 	IDENTIFIER '=' const_expression ;
+
+declaratees:
+	declaratee                                 { put(duplit($1), dupt(declarator, NULL)); } |
+	declaratee ',' declaratees                 { put(duplit($1), dupt(declarator, $1)); } |
+	declaratee '=' initializer                 { put(duplit($1), dupt(declarator, $1)); } |
+	declaratee '=' initializer ',' declaratees { put(duplit($1), dupt(declarator, $1)); } ;
 
 declaratee:
 	pointer direct_declaratee {  } |
