@@ -368,26 +368,22 @@ const_expression:
 	;
 
 addition:
-	  cast
-	| addition OR       cast
-	| addition AND      cast
-	| addition '|'      cast
-	| addition '^'      cast
-	| addition '&'      cast
-	| addition CONTRAST cast
-	| addition COMPARE  cast
-	| addition RIGHT    cast
-	| addition LEFT     cast
-	| addition '+'      cast
-	| addition '-'      cast
-	| addition '*'      cast
-	| addition '/'      cast
-	| addition '%'      cast
-	;
-
-cast:
 	  prefixed
-	| '(' type_name ')' cast
+	| '(' type_name ')' prefixed
+	| addition OR       prefixed
+	| addition AND      prefixed
+	| addition '|'      prefixed
+	| addition '^'      prefixed
+	| addition '&'      prefixed
+	| addition CONTRAST prefixed
+	| addition COMPARE  prefixed
+	| addition RIGHT    prefixed
+	| addition LEFT     prefixed
+	| addition '+'      prefixed
+	| addition '-'      prefixed
+	| addition '*'      prefixed
+	| addition '/'      prefixed
+	| addition '%'      prefixed
 	;
 
 prefixed:
