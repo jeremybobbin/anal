@@ -109,11 +109,12 @@ void put(char *key, char *value) {
 %token <s> ARROW REST ELSE
 
 %type <s> direct_declaratee
-%type <s> primary
+//%type <s> primary
 %type <s> declarator
 %type <s> declaratee
 %type <s> function_definition
 %type <s> type
+%type <s> literal
 
 %left THEN ELSE
 
@@ -275,7 +276,7 @@ identifiers:
 	;
 
 initializer:
-	  assignments
+	  assignment
 	| '{' initializers '}'
 	| '{' initializers ',' '}'
 	;
@@ -348,46 +349,45 @@ statements:
 	;
 
 expression:
-	  assignments
-	| expression ',' assignments
+	  assignment
+	| expression ',' assignment
 	;
 
-assignments:
+assignment:
 	  ternary_expression
-	| prefixed ASSIGNMENT_OPERATOR assignments
-	| prefixed '=' assignments
+	| prefixed '=' assignment
 	;
 
 ternary_expression:
-	  addition_expression
-	| addition_expression '?' expression ':' ternary_expression
+	  addition
+	| addition '?' expression ':' ternary_expression
 	;
 
 const_expression:
-	  ternary_expression
+	ternary_expression
 	;
 
-addition_expression:
-	  cast_expression
-	| addition_expression OR       cast_expression
-	| addition_expression AND      cast_expression
-	| addition_expression '|'      cast_expression
-	| addition_expression '^'      cast_expression
-	| addition_expression '&'      cast_expression
-	| addition_expression CONTRAST cast_expression
-	| addition_expression COMPARE  cast_expression
-	| addition_expression RIGHT    cast_expression
-	| addition_expression LEFT     cast_expression
-	| addition_expression '+'      cast_expression
-	| addition_expression '-'      cast_expression
-	| addition_expression '*'      cast_expression
-	| addition_expression '/'      cast_expression
-	| addition_expression '%'      cast_expression
+addition:
+	  cast
+	| addition OR       cast
+	| addition AND      cast
+	| addition '|'      cast
+	| addition '^'      cast
+	| addition '&'      cast
+	| addition CONTRAST cast
+	| addition COMPARE  cast
+	| addition RIGHT    cast
+	| addition LEFT     cast
+	| addition '+'      cast
+	| addition '-'      cast
+	| addition '*'      cast
+	| addition '/'      cast
+	| addition '%'      cast
 	;
 
-cast_expression:
+cast:
 	  prefixed
-	| '(' type_name ')' cast_expression
+	| '(' type_name ')' cast
 	;
 
 prefixed:
@@ -405,7 +405,9 @@ prefixed:
 	;
 
 suffixed:
-	  primary
+	  IDENTIFIER { printf("%6d%10s identifier ", yylineno, function); unfmt($1); printf(" %s\n", get($1)); }
+	| literal    { printf("%6d%10s literal    ", yylineno, function); unfmt($1); printf("\n");             }
+	| '(' expression ')'
 	| suffixed ARROW IDENTIFIER
 	| suffixed INCREMENT
 	| suffixed DECREMENT
@@ -415,18 +417,16 @@ suffixed:
 	| suffixed '.' IDENTIFIER
 	;
 
-primary:
-	  IDENTIFIER        {  printf("%6d%10s identifier ",     yylineno, function); unfmt($1); printf(" %s\n", get($1)); }
-	| INTEGER           {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
-	| CHARACTER         {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
-	| FLOATING_POINT    {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
-	| STRING            {  printf("%6d%10s literal    ",     yylineno, function); unfmt($1); printf("\n");             }
-	| '(' expression ')'{  printf("%6d%10s literal    ",     yylineno, function); unfmt(""); printf("\n");             }
+literal:
+	  INTEGER
+	| CHARACTER
+	| FLOATING_POINT
+	| STRING
 	;
 
 arguments:
-	  assignments
-	| arguments ',' assignments
+	  assignment
+	| arguments ',' assignment
 	;
 
 %%
